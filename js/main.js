@@ -90,11 +90,34 @@ function renderBestsellers() {
     'beforeend',
     items.map(item => productMarkup(item, 'product-card', 405, 320)).join(''),
   );
+  renderBestsellerDots(items.length);
+}
+
+function getBestsellerStep() {
+  const firstCard = select('[data-bestseller-list] .product-card');
+  if (!firstCard) return 0;
+  const gap = Number.parseFloat(getComputedStyle(select('[data-bestseller-list]')).gap) || 0;
+  return firstCard.getBoundingClientRect().width + gap;
+}
+
+function updateBestsellerDots() {
+  const list = select('[data-bestseller-list]');
+  const dots = document.querySelectorAll('[data-bestseller-dots] button');
+  const step = getBestsellerStep();
+  if (!list || !step) return;
+  const index = Math.round(list.scrollLeft / step);
+  dots.forEach((dot, dotIndex) => dot.classList.toggle('active', dotIndex === index));
+}
+
+function renderBestsellerDots(count) {
+  const dots = select('[data-bestseller-dots]');
+  dots.innerHTML = Array.from({ length: count }, (_, index) =>
+    `<button type="button" aria-label="Go to bestseller ${index + 1}" data-bestseller-dot="${index}"${index === 0 ? ' class="active"' : ''}></button>`,
+  ).join('');
 }
 
 function getFilteredBouquets() {
   return state.products
-    .filter(product => !product.bestseller)
     .filter(product => {
       return !state.query || product.name.toLowerCase().includes(state.query.toLowerCase());
     })
@@ -184,6 +207,20 @@ select('[data-filter-form]')?.addEventListener('submit', event => {
   state.category = String(formData.get('category') || '');
   renderBouquets({ reset: true });
 });
+
+const bestsellerList = select('[data-bestseller-list]');
+select('[data-bestseller-prev]')?.addEventListener('click', () => {
+  bestsellerList.scrollBy({ left: -getBestsellerStep(), behavior: 'smooth' });
+});
+select('[data-bestseller-next]')?.addEventListener('click', () => {
+  bestsellerList.scrollBy({ left: getBestsellerStep(), behavior: 'smooth' });
+});
+select('[data-bestseller-dots]')?.addEventListener('click', event => {
+  const dot = event.target.closest('[data-bestseller-dot]');
+  if (!dot) return;
+  bestsellerList.scrollTo({ left: Number(dot.dataset.bestsellerDot) * getBestsellerStep(), behavior: 'smooth' });
+});
+bestsellerList?.addEventListener('scroll', () => window.requestAnimationFrame(updateBestsellerDots));
 
 const feedbackList = select('[data-feedback-list]');
 select('[data-feedback-prev]')?.addEventListener('click', () => {

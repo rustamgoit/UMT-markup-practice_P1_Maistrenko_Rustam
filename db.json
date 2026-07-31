@@ -6,7 +6,7 @@
       "price": 35,
       "image": "./images/top-1.webp",
       "image2x": "./images/top-1@2x.webp",
-      "category": "bestseller",
+      "category": "spring",
       "description": "Each stem is carefully selected to create a bouquet that radiates freshness, elegance, and the gentle charm of spring. Whether you’re celebrating a birthday, sending love, or simply brightening someone’s day, this arrangement is sure to bring warm smiles and lasting impressions.",
       "bestseller": true
     },
@@ -16,7 +16,7 @@
       "price": 40,
       "image": "./images/top-2.webp",
       "image2x": "./images/top-2@2x.webp",
-      "category": "bestseller",
+      "category": "romantic",
       "description": "Each stem is carefully selected to create a bouquet that radiates freshness, elegance, and the gentle charm of spring. Whether you’re celebrating a birthday, sending love, or simply brightening someone’s day, this arrangement is sure to bring warm smiles and lasting impressions.",
       "bestseller": true
     },
@@ -26,7 +26,7 @@
       "price": 55,
       "image": "./images/top-3.webp",
       "image2x": "./images/top-3@2x.webp",
-      "category": "bestseller",
+      "category": "pastel",
       "description": "Each stem is carefully selected to create a bouquet that radiates freshness, elegance, and the gentle charm of spring. Whether you’re celebrating a birthday, sending love, or simply brightening someone’s day, this arrangement is sure to bring warm smiles and lasting impressions.",
       "bestseller": true
     },
@@ -38,7 +38,7 @@
       "image2x": "./images/bouquet-1@2x.webp",
       "category": "romantic",
       "description": "Each stem is carefully selected to create a bouquet that radiates freshness, elegance, and the gentle charm of spring. Whether you’re celebrating a birthday, sending love, or simply brightening someone’s day, this arrangement is sure to bring warm smiles and lasting impressions.",
-      "bestseller": false
+      "bestseller": true
     },
     {
       "id": 5,
@@ -48,7 +48,7 @@
       "image2x": "./images/bouquet-2@2x.webp",
       "category": "romantic",
       "description": "Each stem is carefully selected to create a bouquet that radiates freshness, elegance, and the gentle charm of spring. Whether you’re celebrating a birthday, sending love, or simply brightening someone’s day, this arrangement is sure to bring warm smiles and lasting impressions.",
-      "bestseller": false
+      "bestseller": true
     },
     {
       "id": 6,
@@ -58,7 +58,7 @@
       "image2x": "./images/bouquet-3@2x.webp",
       "category": "pastel",
       "description": "Each stem is carefully selected to create a bouquet that radiates freshness, elegance, and the gentle charm of spring. Whether you’re celebrating a birthday, sending love, or simply brightening someone’s day, this arrangement is sure to bring warm smiles and lasting impressions.",
-      "bestseller": false
+      "bestseller": true
     },
     {
       "id": 7,

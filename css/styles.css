@@ -1271,3 +1271,248 @@ body.is-locked {
   outline: 2px solid var(--color-link-hover);
   outline-offset: 5px;
 }
+
+/* =========================
+   Final layout corrections
+   ========================= */
+
+/* Header: tablet menu remains centered and has no CTA. */
+@media (min-width: 768px) and (max-width: 1439px) {
+  .mobile-menu-inner {
+    display: flex;
+    min-height: 100%;
+    flex-direction: column;
+  }
+
+  .mobile-nav-list {
+    width: 100%;
+    margin-top: 72px;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .mobile-menu-cta,
+  .header-cta {
+    display: none;
+  }
+}
+
+/* Keep the hero image full-bleed and the content at its Figma width. */
+.hero {
+  background-position: center;
+  background-size: cover;
+}
+
+@media (min-width: 1440px) {
+  .hero-container {
+    width: 100%;
+    max-width: 1440px;
+    padding: 80px;
+    align-items: flex-start;
+  }
+
+  .hero-copy {
+    width: 667px;
+    max-width: 667px;
+  }
+
+  .hero-button {
+    width: 215px;
+    margin-top: 32px;
+  }
+}
+
+/* Bestseller carousel: 1 card on mobile, 2 on tablet, 3 on desktop. */
+.bestseller-viewport {
+  overflow: hidden;
+}
+
+.top-products {
+  scroll-behavior: smooth;
+}
+
+.slider-dots button {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-text);
+  opacity: 0.2;
+  transition: opacity var(--transition), transform var(--transition);
+}
+
+.slider-dots button.active {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+@media (min-width: 1440px) {
+  .top-products {
+    display: flex;
+    gap: 32px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+
+  .product-card {
+    flex: 0 0 calc((100% - 64px) / 3);
+  }
+
+  .slider-controls {
+    display: flex;
+  }
+
+  .slider-arrows {
+    display: flex;
+  }
+}
+
+/* Testimonials retain the white section, wide bordered cards and arrow navigation. */
+.feedback {
+  background: var(--color-white);
+}
+
+.feedback-grid {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+.quote-card {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+}
+
+@media (min-width: 768px) {
+  .quote-card {
+    flex-basis: calc((100% - 24px) / 2);
+  }
+}
+
+@media (min-width: 1440px) {
+  .quote-card {
+    flex-basis: calc((100% - 64px) / 3);
+    min-height: 250px;
+  }
+}
+
+/* Contact image follows the text and spans the available width on every breakpoint. */
+.contacts-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.contact-copy {
+  max-width: 768px;
+}
+
+.contact-image {
+  width: 100%;
+  max-height: 560px;
+  object-fit: cover;
+}
+
+@media (min-width: 768px) {
+  .contacts-grid {
+    gap: 48px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .contacts-grid {
+    gap: 64px;
+  }
+}
+
+/* Footer order: logo, navigation, subscription, social icons. */
+.footer-top {
+  align-items: center;
+}
+
+.footer-logo img {
+  width: 180px;
+}
+
+.footer-center {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+.subscribe-form {
+  width: min(100%, 720px);
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.subscribe-fields {
+  min-width: 0;
+}
+
+.socials svg {
+  display: block;
+  fill: var(--color-text);
+}
+
+.agreement-input:checked + .custom-checkbox {
+  border-color: var(--color-text);
+  background-color: var(--color-yellow);
+}
+
+.custom-checkbox svg {
+  fill: var(--color-text);
+}
+
+@media (min-width: 768px) {
+  .footer-top {
+    gap: 32px;
+  }
+
+  .footer-links {
+    justify-content: center;
+  }
+
+  .subscribe-form {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
+    text-align: left;
+  }
+}
+
+@media (min-width: 1440px) {
+  .footer-top {
+    grid-template-columns: 220px minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 64px;
+  }
+
+  .footer-logo img {
+    width: 180px;
+  }
+
+  .footer-center {
+    align-items: stretch;
+    gap: 28px;
+  }
+
+  .footer-links {
+    justify-content: flex-start;
+    white-space: nowrap;
+  }
+
+  .subscribe-form {
+    width: 100%;
+    grid-template-columns: 220px minmax(360px, 1fr);
+  }
+
+  .socials {
+    align-self: start;
+    justify-self: end;
+  }
+}
