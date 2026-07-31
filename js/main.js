@@ -91,6 +91,7 @@ function renderBestsellers() {
     items.map(item => productMarkup(item, 'product-card', 405, 320)).join(''),
   );
   renderBestsellerDots(items.length);
+  window.setTimeout(refreshSliderButtons, 0);
 }
 
 function getBestsellerStep() {
@@ -194,6 +195,7 @@ function renderReviews() {
       )
       .join(''),
   );
+  window.setTimeout(refreshSliderButtons, 0);
 }
 
 select('[data-load-more]')?.addEventListener('click', () => {
@@ -346,3 +348,117 @@ async function init() {
 }
 
 init();
+
+/* UI-kit states and form validation */
+function setClickedState(button) {
+  if (!button) return;
+  button.classList.add('is-clicked');
+  window.setTimeout(() => button.classList.remove('is-clicked'), 180);
+}
+
+document.addEventListener('click', event => {
+  const button = event.target.closest('.button');
+  if (button && !button.disabled) setClickedState(button);
+});
+
+function setFieldError(field, message) {
+  const wrapper = field.closest('.form-field') || field.closest('form');
+  if (!wrapper) return;
+  wrapper.classList.add('is-invalid');
+  field.setAttribute('aria-invalid', 'true');
+  let error = wrapper.querySelector('.field-error');
+  if (!error) {
+    error = document.createElement('span');
+    error.className = 'field-error';
+    field.insertAdjacentElement('afterend', error);
+  }
+  error.textContent = message;
+}
+
+function clearFieldError(field) {
+  const wrapper = field.closest('.form-field') || field.closest('form');
+  wrapper?.classList.remove('is-invalid');
+  field.removeAttribute('aria-invalid');
+  wrapper?.querySelector('.field-error')?.remove();
+}
+
+function validateRequiredField(field) {
+  const value = field.value.trim();
+  if (!value) {
+    setFieldError(field, `Please enter ${field.name === 'address' ? 'your address' : `your ${field.name}`}.`);
+    return false;
+  }
+  if (field.type === 'email' && !field.validity.valid) {
+    setFieldError(field, 'Please enter a valid email address.');
+    return false;
+  }
+  clearFieldError(field);
+  return true;
+}
+
+const selectAllRequired = form => Array.from(form.querySelectorAll('[required]'));
+
+const orderFormElement = select('[data-order-form]');
+orderFormElement?.querySelectorAll('input, textarea').forEach(field => {
+  field.addEventListener('input', () => clearFieldError(field));
+});
+
+orderFormElement?.addEventListener('submit', event => {
+  const fields = selectAllRequired(event.currentTarget);
+  const valid = fields.every(validateRequiredField);
+  if (!valid) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    fields.find(field => field.getAttribute('aria-invalid') === 'true')?.focus();
+  }
+}, true);
+
+const subscribeFormElement = select('[data-subscribe-form]');
+subscribeFormElement?.querySelectorAll('input').forEach(field => {
+  field.addEventListener('input', () => clearFieldError(field));
+  field.addEventListener('change', () => {
+    field.closest('.agreement')?.classList.remove('is-invalid');
+    field.closest('.agreement')?.querySelector('.field-error')?.remove();
+  });
+});
+
+subscribeFormElement?.addEventListener('submit', event => {
+  const email = event.currentTarget.elements.email;
+  const agreement = event.currentTarget.elements.agreement;
+  let valid = validateRequiredField(email);
+  if (!agreement.checked) {
+    const wrapper = agreement.closest('.agreement');
+    wrapper.classList.add('is-invalid');
+    if (!wrapper.querySelector('.field-error')) {
+      wrapper.insertAdjacentHTML('beforeend', '<span class="field-error">Please accept the privacy policy.</span>');
+    }
+    valid = false;
+  }
+  if (!valid) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    (email.getAttribute('aria-invalid') === 'true' ? email : agreement).focus();
+  }
+}, true);
+
+function updateHorizontalControls(list, previousButton, nextButton) {
+  if (!list || !previousButton || !nextButton) return;
+  const maxScroll = Math.max(0, list.scrollWidth - list.clientWidth);
+  previousButton.disabled = list.scrollLeft <= 2;
+  nextButton.disabled = list.scrollLeft >= maxScroll - 2;
+}
+
+const bestsellerPrevious = select('[data-bestseller-prev]');
+const bestsellerNext = select('[data-bestseller-next]');
+const feedbackPrevious = select('[data-feedback-prev]');
+const feedbackNext = select('[data-feedback-next]');
+
+function refreshSliderButtons() {
+  updateHorizontalControls(bestsellerList, bestsellerPrevious, bestsellerNext);
+  updateHorizontalControls(feedbackList, feedbackPrevious, feedbackNext);
+}
+
+bestsellerList?.addEventListener('scroll', () => window.requestAnimationFrame(refreshSliderButtons));
+feedbackList?.addEventListener('scroll', () => window.requestAnimationFrame(refreshSliderButtons));
+window.addEventListener('resize', refreshSliderButtons);
+window.setTimeout(refreshSliderButtons, 300);

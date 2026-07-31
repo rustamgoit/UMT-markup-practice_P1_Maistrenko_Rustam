@@ -1516,3 +1516,259 @@ body.is-locked {
     justify-self: end;
   }
 }
+
+/* =========================
+   Scope 2 polish — UI kit and requested layout
+   ========================= */
+
+/* Minimal catalogue controls: no tinted panel or outer frame. */
+.catalogue-tools {
+  margin-bottom: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+/* UI-kit form states. */
+.catalogue-tools input,
+.catalogue-tools select,
+.subscribe-form input,
+.order-form input,
+.order-form textarea,
+.quantity-input {
+  border-color: rgba(3, 12, 1, 0.15);
+  box-shadow: none;
+}
+
+.catalogue-tools input:hover,
+.catalogue-tools select:hover,
+.subscribe-form input:hover,
+.order-form input:hover,
+.order-form textarea:hover,
+.quantity-input:hover {
+  border-color: rgba(3, 12, 1, 0.45);
+}
+
+.catalogue-tools input:focus,
+.catalogue-tools select:focus,
+.subscribe-form input:focus,
+.order-form input:focus,
+.order-form textarea:focus,
+.quantity-input:focus {
+  border-color: var(--color-text);
+  box-shadow: none;
+}
+
+.form-field.is-invalid input,
+.form-field.is-invalid textarea,
+.subscribe-form.is-invalid input,
+.agreement.is-invalid .custom-checkbox {
+  border-color: #c62828;
+}
+
+.field-error {
+  margin-top: 4px;
+  color: #c62828;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* UI-kit button states. */
+.button {
+  transition:
+    background-color var(--transition),
+    color var(--transition),
+    transform var(--transition),
+    opacity var(--transition);
+}
+
+.button:hover,
+.button:focus-visible {
+  transform: scale(1.035);
+}
+
+.button:active,
+.button.is-clicked {
+  background: #353c3a;
+  color: #ffffff;
+  transform: scale(1);
+}
+
+.button:disabled,
+.button.is-disabled {
+  cursor: not-allowed;
+  background: #e5e6e5;
+  color: rgba(3, 12, 1, 0.4);
+  opacity: 1;
+  transform: none;
+}
+
+/* Slider controls are centered; arrows are desktop-only. */
+.slider-controls {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.slider-arrows,
+.feedback-arrows {
+  justify-content: center;
+}
+
+.slider-arrows button,
+.feedback-arrows button {
+  transition:
+    background-color var(--transition),
+    border-color var(--transition),
+    opacity var(--transition),
+    transform var(--transition);
+}
+
+.slider-arrows button:hover:not(:disabled),
+.slider-arrows button:focus-visible:not(:disabled),
+.feedback-arrows button:hover:not(:disabled),
+.feedback-arrows button:focus-visible:not(:disabled) {
+  transform: scale(1.06);
+}
+
+.slider-arrows button:active:not(:disabled),
+.feedback-arrows button:active:not(:disabled) {
+  background-color: rgba(66, 237, 19, 0.2);
+  border-color: rgba(66, 237, 19, 0.45);
+  transform: scale(1);
+}
+
+.slider-arrows button:disabled,
+.feedback-arrows button:disabled {
+  cursor: not-allowed;
+  opacity: 0.28;
+}
+
+@media (max-width: 1439px) {
+  .slider-arrows {
+    display: none;
+  }
+}
+
+/* Contact: text details on top, full-width image below at every breakpoint. */
+.contacts .contacts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "copy"
+    "image";
+  align-items: stretch;
+  gap: 40px;
+}
+
+.contacts .contact-copy {
+  grid-area: copy;
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: none;
+}
+
+.contacts .contact-image {
+  grid-area: image;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  aspect-ratio: 1280 / 520;
+  object-fit: cover;
+  object-position: center;
+}
+
+@media (min-width: 768px) {
+  .contacts .contact-copy {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 56px;
+  }
+
+  .contacts .eyebrow,
+  .contacts .contact-copy h2,
+  .contacts .contact-intro {
+    grid-column: 1;
+  }
+
+  .contacts .contact-list {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    align-self: center;
+  }
+}
+
+/* Footer subscription remains minimal. */
+.subscribe-form {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.subscribe-row input {
+  background: transparent;
+}
+
+/* Large, unframed social icons. */
+.socials {
+  align-items: center;
+}
+
+.socials a {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.socials a:hover,
+.socials a:focus-visible {
+  background: transparent;
+  transform: scale(1.12);
+}
+
+.socials svg {
+  width: 32px;
+  height: 32px;
+}
+
+/* Tablet/mobile order: logo, links, subscription, then social icons. */
+@media (max-width: 1439px) {
+  .footer-top {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .footer-logo {
+    order: 1;
+  }
+
+  .footer-center {
+    order: 2;
+  }
+
+  .socials {
+    order: 3;
+    margin-top: 4px;
+  }
+}
+
+/* Desktop keeps the large Flora logo on the left. */
+@media (min-width: 1440px) {
+  .footer-top {
+    grid-template-columns: 220px minmax(0, 1fr) auto;
+  }
+
+  .footer-logo img {
+    width: 180px;
+    height: auto;
+  }
+
+  .socials {
+    align-self: end;
+  }
+}

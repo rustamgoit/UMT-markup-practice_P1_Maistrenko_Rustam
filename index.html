@@ -279,7 +279,7 @@
             <li><a href="#contacts">Contacts</a></li>
           </ul>
 
-          <form class="subscribe-form" data-subscribe-form>
+          <form class="subscribe-form" data-subscribe-form novalidate>
             <div class="subscribe-copy">
               <h2>Stay in bloom</h2>
               <p>Subscribe for floral news and special offers.</p>
@@ -349,16 +349,16 @@
           <img src="./images/cross.svg" width="24" height="24" alt="" />
         </button>
         <h2 id="order-title">Order</h2>
-        <form class="order-form" data-order-form>
-          <label>
+        <form class="order-form" data-order-form novalidate>
+          <label class="form-field">
             <span>Name*</span>
             <input name="name" type="text" placeholder="Ann" required />
           </label>
-          <label>
+          <label class="form-field">
             <span>Phone*</span>
             <input name="phone" type="tel" placeholder="+1 (555) 123-4567" required />
           </label>
-          <label>
+          <label class="form-field">
             <span>Address*</span>
             <input
               name="address"
@@ -367,7 +367,7 @@
               required
             />
           </label>
-          <label>
+          <label class="form-field">
             <span>Message</span>
             <textarea name="message" placeholder="Type your message..."></textarea>
           </label>
