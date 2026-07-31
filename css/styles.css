@@ -11,3 +11,89 @@
 @media(min-width:375px){.container{padding-inline:20px}}
 @media(min-width:768px){.container{padding-inline:32px}.section{padding-block:80px}h1{font-size:48px}h2{font-size:44px}.site-header{height:72px}.mobile-menu-inner{width:520px;margin-left:auto;padding:28px 40px}.mobile-menu-top .logo img{width:126px}.mobile-nav-list{gap:32px;margin-top:56px}.mobile-nav-list a{font-size:24px}.mobile-menu-cta{margin-top:40px}.hero,.hero-container{min-height:610px}.hero-container{align-items:center;padding-block:64px}.hero-copy{max-width:520px}.hero-copy p{margin-top:24px;font-size:18px}.hero-copy .button{width:260px;margin:32px 0 0;font-size:16px}.about-grid,.contacts-grid{grid-template-columns:repeat(2,minmax(0,1fr));align-items:center;gap:48px}.flower-mark{width:82px}.about-copy p,.contact-intro{font-size:18px}.top-products{gap:24px}.product-card{flex-basis:calc((100% - 24px)/2)}.product-card h3,.bouquet-card h3{margin-top:16px}.price{margin-top:8px;font-size:20px}.bouquet-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:48px 24px}.section-heading p{font-size:18px}.feedback-grid{gap:24px}.quote-card{flex-basis:calc((100% - 24px)/2);padding:28px}.footer{padding-top:52px}.footer-logo img{width:220px}.footer-links{flex-direction:row;flex-wrap:wrap;justify-content:center;gap:16px 28px}.product-modal{display:grid;grid-template-columns:1fr 1fr;width:min(92vw,900px);padding:64px 40px 40px;gap:32px}.product-modal-image{height:100%;aspect-ratio:auto}.product-modal-content h2{margin-top:0}.order-modal{width:min(92vw,680px);padding:72px 48px 44px}}
 @media(min-width:1440px){.container{padding-inline:28px}.section{padding-block:92px}h1{font-size:56px}h2{font-size:48px}.desktop-nav,.header-cta{display:block}.menu-button{display:none}.nav-list{display:flex;gap:32px}.header-cta{min-height:40px;padding:8px 20px}.hero,.hero-container{min-height:669px}.hero-container{align-items:center}.hero-copy{max-width:667px}.hero-copy .button{width:auto}.about-grid,.contacts-grid{gap:80px}.flower-mark{width:96px}.top-products{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;overflow:visible}.product-card{min-width:0}.slider-controls{flex-direction:column;gap:24px;margin-top:48px}.dots span{width:8px;height:8px}.arrows{display:flex;gap:16px}.arrows button,.back-to-top{display:grid;width:48px;height:48px;place-items:center;padding:0;border:1px solid var(--border);border-radius:50%;background:#fff}.bouquet-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:64px 32px}.feedback-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;overflow:visible}.quote-card{min-height:228px;padding:32px}.footer{padding:64px 0 24px;text-align:left}.footer-top{display:grid;grid-template-columns:1fr auto 1fr;align-items:center}.footer-logo img{width:84px}.footer-links{display:flex;gap:24px}.socials{justify-self:end}.footer-bottom{justify-content:space-between;font-size:14px}.back-to-top{display:grid}}
+
+/* Final responsive corrections from the supplied Figma PDFs */
+.hero {
+  background-image: url("../images/hero.png");
+  background-position: right center;
+  background-repeat: no-repeat;
+  background-size: auto 100%;
+}
+
+.hero-copy .button {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+@media (max-width: 767px) {
+  .mobile-menu {
+    transform: translateX(-100%);
+  }
+
+  .mobile-menu.is-open {
+    transform: translateX(0);
+  }
+
+  .mobile-menu-inner {
+    width: 100%;
+    margin: 0;
+  }
+
+  .hero,
+  .hero-container {
+    min-height: max(600px, calc(100svh - 64px));
+  }
+
+  .hero-container {
+    align-items: flex-start;
+    padding-top: 44px;
+    padding-bottom: 44px;
+  }
+
+  .hero-copy {
+    width: min(64%, 215px);
+    max-width: 215px;
+  }
+
+  .hero-copy .button {
+    width: 100%;
+    min-width: 0;
+    padding-inline: 14px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1439px) {
+  .mobile-menu-inner {
+    width: 100%;
+    margin: 0;
+    padding: 28px 40px 40px;
+  }
+
+  .mobile-nav-list {
+    width: 220px;
+    margin: 56px auto 0;
+  }
+
+  .mobile-nav-list a {
+    text-align: left;
+  }
+
+  .mobile-menu-cta {
+    display: none;
+  }
+
+  .hero-copy {
+    width: 55%;
+    max-width: 430px;
+  }
+
+  .hero-copy .button {
+    width: 215px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .hero-copy .button {
+    width: auto;
+  }
+}
