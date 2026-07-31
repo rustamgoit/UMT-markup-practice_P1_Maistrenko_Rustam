@@ -26,3 +26,14 @@ document.querySelectorAll('.modal-backdrop').forEach(m=>m.addEventListener('clic
 document.querySelector('.order-modal')?.addEventListener('submit',e=>e.preventDefault());
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){setMenuState(false);document.querySelectorAll('.modal-backdrop.is-open').forEach(m=>toggleModal(m,false))}});
 updateDots();
+
+const feedbackTrack=document.querySelector('.feedback-grid');
+const feedbackCards=[...(feedbackTrack?.children||[])];
+const feedbackDots=[...document.querySelectorAll('.feedback-dots span')];
+const feedbackPerView=()=>window.innerWidth>=1440?3:window.innerWidth>=768?2:1;
+const updateFeedbackDots=()=>{if(!feedbackTrack)return;const nearest=feedbackCards.reduce((best,c,i)=>Math.abs(c.offsetLeft-feedbackTrack.scrollLeft)<best.d?{i,d:Math.abs(c.offsetLeft-feedbackTrack.scrollLeft)}:best,{i:0,d:Infinity});const page=Math.floor(nearest.i/feedbackPerView());feedbackDots.forEach((d,i)=>d.classList.toggle('active',i===page))};
+feedbackTrack?.addEventListener('scroll',updateFeedbackDots,{passive:true});
+window.addEventListener('resize',updateFeedbackDots);
+document.querySelector('[data-feedback-prev]')?.addEventListener('click',()=>feedbackTrack.scrollBy({left:-feedbackTrack.clientWidth,behavior:'smooth'}));
+document.querySelector('[data-feedback-next]')?.addEventListener('click',()=>feedbackTrack.scrollBy({left:feedbackTrack.clientWidth,behavior:'smooth'}));
+updateFeedbackDots();
