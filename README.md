@@ -1,19 +1,20 @@
-# Flora
+# Flora — Scope 2
 
-Adaptive landing page for a flower shop, created from the Flora Figma layout.
+## GitHub Pages
+The deployed version loads mock data from `db.json` with Axios, so it works on static hosting.
 
-## Technologies
+## Local json-server
+```bash
+npm install
+npm run server
+```
+Then replace `API_URL` in `js/main.js` with `http://localhost:3000` and use `/products` or `/reviews` endpoints if you want to test real query parameters such as `_page`, `_limit`, `q`, and `category`.
 
-- Semantic HTML5
-- Mobile-first CSS
-- JavaScript for the mobile menu and sliders
-- modern-normalize
-- Animate.css
-- Optimized WebP images
-- SVG sprite
-
-## Breakpoints
-
-- Mobile: 375px
-- Tablet: 768px
-- Desktop: 1440px
+## Implemented
+- responsive Retina images with `srcset` and background `min-resolution` media queries;
+- product and order modals opened through `.is-open`;
+- semantic order and subscription forms;
+- custom agreement checkbox with an SVG symbol;
+- Axios + async/await + error handling;
+- dynamic products and reviews using template strings and `insertAdjacentHTML`;
+- Load more, search, category filtering, empty/end states, and central application state.

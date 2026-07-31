@@ -1,0 +1,148 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Spring Elegance",
+      "price": 35,
+      "image": "./images/top-1.webp",
+      "image2x": "./images/top-1@2x.webp",
+      "category": "bestseller",
+      "description": "Each stem is carefully selected to create a bouquet that radiates freshness, elegance, and the gentle charm of spring. Whether you’re celebrating a birthday, sending love, or simply brightening someone’s day, this arrangement is sure to bring warm smiles and lasting impressions.",
+      "bestseller": true
+    },
+    {
+      "id": 2,
+      "name": "Berry Chic",
+      "price": 40,
+      "image": "./images/top-2.webp",
+      "image2x": "./images/top-2@2x.webp",
+      "category": "bestseller",
+      "description": "Each stem is carefully selected to create a bouquet that radiates freshness, elegance, and the gentle charm of spring. Whether you’re celebrating a birthday, sending love, or simply brightening someone’s day, this arrangement is sure to bring warm smiles and lasting impressions.",
+      "bestseller": true
+    },
+    {
+      "id": 3,
+      "name": "Lavender Dream",
+      "price": 55,
+      "image": "./images/top-3.webp",
+      "image2x": "./images/top-3@2x.webp",
+      "category": "bestseller",
+      "description": "Each stem is carefully selected to create a bouquet that radiates freshness, elegance, and the gentle charm of spring. Whether you’re celebrating a birthday, sending love, or simply brightening someone’s day, this arrangement is sure to bring warm smiles and lasting impressions.",
+      "bestseller": true
+    },
+    {
+      "id": 4,
+      "name": "Peach Meadow",
+      "price": 55,
+      "image": "./images/bouquet-1.webp",
+      "image2x": "./images/bouquet-1@2x.webp",
+      "category": "romantic",
+      "description": "Each stem is carefully selected to create a bouquet that radiates freshness, elegance, and the gentle charm of spring. Whether you’re celebrating a birthday, sending love, or simply brightening someone’s day, this arrangement is sure to bring warm smiles and lasting impressions.",
+      "bestseller": false
+    },
+    {
+      "id": 5,
+      "name": "Blush Romance",
+      "price": 34,
+      "image": "./images/bouquet-2.webp",
+      "image2x": "./images/bouquet-2@2x.webp",
+      "category": "romantic",
+      "description": "Each stem is carefully selected to create a bouquet that radiates freshness, elegance, and the gentle charm of spring. Whether you’re celebrating a birthday, sending love, or simply brightening someone’s day, this arrangement is sure to bring warm smiles and lasting impressions.",
+      "bestseller": false
+    },
+    {
+      "id": 6,
+      "name": "Pastel Garden",
+      "price": 40,
+      "image": "./images/bouquet-3.webp",
+      "image2x": "./images/bouquet-3@2x.webp",
+      "category": "pastel",
+      "description": "Each stem is carefully selected to create a bouquet that radiates freshness, elegance, and the gentle charm of spring. Whether you’re celebrating a birthday, sending love, or simply brightening someone’s day, this arrangement is sure to bring warm smiles and lasting impressions.",
+      "bestseller": false
+    },
+    {
+      "id": 7,
+      "name": "Tulip Charm",
+      "price": 61,
+      "image": "./images/bouquet-4.webp",
+      "image2x": "./images/bouquet-4@2x.webp",
+      "category": "spring",
+      "description": "Each stem is carefully selected to create a bouquet that radiates freshness, elegance, and the gentle charm of spring. Whether you’re celebrating a birthday, sending love, or simply brightening someone’s day, this arrangement is sure to bring warm smiles and lasting impressions.",
+      "bestseller": false
+    },
+    {
+      "id": 8,
+      "name": "Berry Bloom",
+      "price": 32,
+      "image": "./images/bouquet-5.webp",
+      "image2x": "./images/bouquet-5@2x.webp",
+      "category": "bright",
+      "description": "Each stem is carefully selected to create a bouquet that radiates freshness, elegance, and the gentle charm of spring. Whether you’re celebrating a birthday, sending love, or simply brightening someone’s day, this arrangement is sure to bring warm smiles and lasting impressions.",
+      "bestseller": false
+    },
+    {
+      "id": 9,
+      "name": "Sweet Whisper",
+      "price": 40,
+      "image": "./images/bouquet-6.webp",
+      "image2x": "./images/bouquet-6@2x.webp",
+      "category": "pastel",
+      "description": "Each stem is carefully selected to create a bouquet that radiates freshness, elegance, and the gentle charm of spring. Whether you’re celebrating a birthday, sending love, or simply brightening someone’s day, this arrangement is sure to bring warm smiles and lasting impressions.",
+      "bestseller": false
+    },
+    {
+      "id": 10,
+      "name": "Field Joy",
+      "price": 49,
+      "image": "./images/bouquet-7.webp",
+      "image2x": "./images/bouquet-7@2x.webp",
+      "category": "bright",
+      "description": "Each stem is carefully selected to create a bouquet that radiates freshness, elegance, and the gentle charm of spring. Whether you’re celebrating a birthday, sending love, or simply brightening someone’s day, this arrangement is sure to bring warm smiles and lasting impressions.",
+      "bestseller": false
+    },
+    {
+      "id": 11,
+      "name": "Soft Bloom",
+      "price": 37,
+      "image": "./images/bouquet-8.webp",
+      "image2x": "./images/bouquet-8@2x.webp",
+      "category": "pastel",
+      "description": "Each stem is carefully selected to create a bouquet that radiates freshness, elegance, and the gentle charm of spring. Whether you’re celebrating a birthday, sending love, or simply brightening someone’s day, this arrangement is sure to bring warm smiles and lasting impressions.",
+      "bestseller": false
+    }
+  ],
+  "reviews": [
+    {
+      "id": 1,
+      "text": "Flora made my anniversary unforgettable with their beautiful arrangement!",
+      "author": "Emma T."
+    },
+    {
+      "id": 2,
+      "text": "Absolutely stunning bouquet! It looked even better than the photo and arrived right on time.",
+      "author": "Daniel R."
+    },
+    {
+      "id": 3,
+      "text": "The service was exceptional, and the flowers were fresh!",
+      "author": "Olivia M."
+    },
+    {
+      "id": 4,
+      "text": "Ordered a last-minute gift and was amazed by the fast, professional delivery. Highly recommend!",
+      "author": "Julia L."
+    },
+    {
+      "id": 5,
+      "text": "Every flower was perfect. You can feel the care and love in every bouquet.",
+      "author": "Mark S."
+    },
+    {
+      "id": 6,
+      "text": "Flora helped make my friend’s birthday extra special. She was blown away by the flowers!",
+      "author": "Natalie P."
+    }
+  ],
+  "orders": [],
+  "subscriptions": []
+}
