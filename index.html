@@ -111,7 +111,7 @@
         <div class="container">
           <h2>Top-Selling Bouquets</h2>
           <ul class="top-products">
-            <li class="product-card">
+            <li class="product-card" data-product-open tabindex="0" role="button" aria-label="View Spring Elegance details">
               <img src="./images/top-1.png" width="405" height="320" alt="Spring Elegance bouquet" loading="lazy" />
               <h3>Spring Elegance</h3>
               <p class="price">$35</p>
@@ -198,6 +198,39 @@
       </div>
       <div class="container footer-bottom"><p>© 2025 Flora. All rights reserved.</p><a class="back-to-top" href="#home" aria-label="Back to top"><img src="./images/top-arrow-alt.svg" width="24" height="24" alt="" /></a></div>
     </footer>
+
+
+    <div class="modal-backdrop" data-product-modal aria-hidden="true">
+      <div class="product-modal" role="dialog" aria-modal="true" aria-labelledby="product-modal-title">
+        <button class="modal-close" type="button" aria-label="Close product details" data-product-close>
+          <img src="./images/cross.svg" width="24" height="24" alt="" />
+        </button>
+        <img class="product-modal-image" src="./images/top-1.png" width="405" height="320" alt="Spring Elegance bouquet" />
+        <div class="product-modal-content">
+          <h2 id="product-modal-title">Spring Elegance</h2>
+          <p class="product-modal-price">$35</p>
+          <p>Each stem is carefully selected to create a bouquet that radiates freshness, elegance, and the gentle charm of spring. Whether you’re celebrating a birthday, sending love, or simply brightening someone’s day, this arrangement is sure to bring warm smiles and lasting impressions.</p>
+          <div class="product-modal-actions">
+            <button class="button buy-button" type="button" data-order-open>Buy now</button>
+            <label class="quantity-field"><span class="visually-hidden">Quantity</span><input type="number" min="1" value="1" /></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-backdrop" data-order-modal aria-hidden="true">
+      <form class="order-modal" role="dialog" aria-modal="true" aria-labelledby="order-modal-title">
+        <button class="modal-close" type="button" aria-label="Close order form" data-order-close>
+          <img src="./images/cross.svg" width="24" height="24" alt="" />
+        </button>
+        <h2 id="order-modal-title">Order</h2>
+        <label>Name*<input type="text" value="Ann" required /></label>
+        <label>Phone*<input type="tel" value="+1 (555) 123-4567" required /></label>
+        <label>Adress*<input type="text" value="456 Floral Ave, Sydney NSW 2000 AU" required /></label>
+        <label>Message<textarea rows="4" placeholder="Type your message..."></textarea></label>
+        <button class="button order-submit" type="submit">Go to Checkout</button>
+      </form>
+    </div>
 
     <script src="./js/main.js"></script>
   </body>
