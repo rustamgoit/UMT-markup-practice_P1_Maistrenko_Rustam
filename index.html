@@ -286,38 +286,32 @@
             </div>
             <div class="subscribe-fields">
               <div class="subscribe-row">
-                <label class="visually-hidden" for="subscribe-email">Email</label>
-                <input id="subscribe-email" name="email" type="email" placeholder="Enter your email" required />
+                <div class="subscribe-email-field">
+                  <label class="visually-hidden" for="subscribe-email">Email</label>
+                  <input id="subscribe-email" name="email" type="email" placeholder="Enter your email" required />
+                  <p class="field-error" data-email-error></p>
+                </div>
                 <button class="button" type="submit">Subscribe</button>
               </div>
-              <label class="agreement">
-                <input class="agreement-input" type="checkbox" name="agreement" required />
-                <span class="custom-checkbox">
-                  <svg width="16" height="16" aria-hidden="true"><use href="#icon-check"></use></svg>
-                </span>
-                <span>I agree to the privacy policy</span>
-              </label>
+              <div class="agreement-field">
+                <label class="agreement">
+                  <input class="agreement-input" type="checkbox" name="agreement" required />
+                  <span class="custom-checkbox">
+                    <svg width="16" height="16" aria-hidden="true"><use href="#icon-check"></use></svg>
+                  </span>
+                  <span>I agree to the privacy policy</span>
+                </label>
+                <p class="field-error" data-agreement-error></p>
+              </div>
               <p class="form-message" data-subscribe-message></p>
             </div>
           </form>
         </div>
 
         <ul class="socials">
-          <li>
-            <a href="#" aria-label="Facebook">
-              <img src="./images/facebook.svg" width="32" height="32" alt="" aria-hidden="true" />
-            </a>
-          </li>
-          <li>
-            <a href="#" aria-label="X">
-              <img src="./images/x.svg" width="32" height="32" alt="" aria-hidden="true" />
-            </a>
-          </li>
-          <li>
-            <a href="#" aria-label="Instagram">
-              <img src="./images/instagram.svg" width="32" height="32" alt="" aria-hidden="true" />
-            </a>
-          </li>
+          <li><a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M22 12.3C22 6.75 17.52 2.24 12 2.24S2 6.75 2 12.3c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9V12.3h2.54v-2.22c0-2.52 1.49-3.91 3.78-3.91 1.09 0 2.23.2 2.23.2v2.48h-1.26c-1.24 0-1.63.78-1.63 1.57v1.89h2.78l-.45 2.9h-2.33v7.03C18.34 21.49 22 17.33 22 12.3Z"/></svg></a></li>
+          <li><a href="#" aria-label="X"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="m16.19 6.34-4.24 4.25-4.24-4.25-1.42 1.42L10.54 12l-4.25 4.24 1.42 1.42 4.24-4.25 4.24 4.25 1.42-1.42L13.36 12l4.25-4.24-1.42-1.42Z"/></svg></a></li>
+          <li><a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 4.62c2.4 0 2.69.01 3.63.05.88.04 1.35.19 1.67.31.42.16.72.36 1.03.67.32.32.51.62.68 1.04.12.32.27.79.31 1.67.04.95.05 1.23.05 3.63s-.01 2.69-.05 3.64c-.04.88-.19 1.35-.31 1.67-.16.42-.36.72-.67 1.03-.32.32-.62.51-1.04.68-.32.12-.79.27-1.67.31-.95.04-1.23.05-3.63.05s-2.69-.01-3.64-.05c-.88-.04-1.35-.19-1.67-.31-.42-.16-.72-.36-1.03-.67-.32-.32-.51-.62-.68-1.04-.12-.32-.27-.79-.31-1.67-.04-.95-.05-1.23-.05-3.63s.01-2.69.05-3.64c.04-.88.19-1.35.31-1.67.16-.42.36-.72.67-1.03.32-.32.62-.51 1.04-.68.32-.12.79-.27 1.67-.31.95-.04 1.23-.05 3.64-.05ZM12 3c-2.44 0-2.75.01-3.71.05-.96.04-1.61.2-2.18.42-.59.23-1.1.54-1.6 1.04-.5.5-.81 1-1.04 1.59-.22.57-.38 1.23-.42 2.19C3.01 9.25 3 9.56 3 12s.01 2.75.05 3.71c.04.96.2 1.61.42 2.18.23.59.54 1.1 1.04 1.6.5.5 1 .81 1.59 1.04.57.22 1.23.38 2.19.42.96.04 1.27.05 3.71.05s2.75-.01 3.71-.05c.96-.04 1.61-.2 2.18-.42.59-.23 1.1-.54 1.6-1.04.5-.5.81-1 1.04-1.59.22-.57.38-1.23.42-2.19.04-.96.05-1.27.05-3.71s-.01-2.75-.05-3.71c-.04-.96-.2-1.61-.42-2.18-.23-.59-.54-1.1-1.04-1.6-.5-.5-1-.81-1.59-1.04-.57-.22-1.23-.38-2.19-.42C14.75 3.01 14.44 3 12 3Zm0 4.38A4.62 4.62 0 1 0 12 16.62 4.62 4.62 0 0 0 12 7.38Zm0 7.62a3 3 0 1 1 0-6 3 3 0 0 1 0 6Zm5.88-7.81a1.08 1.08 0 1 1-2.16 0 1.08 1.08 0 0 1 2.16 0Z"/></svg></a></li>
         </ul>
       </div>
       <div class="container footer-bottom">
@@ -365,10 +359,12 @@
           <label>
             <span>Name*</span>
             <input name="name" type="text" placeholder="Ann" required />
+            <small class="field-error"></small>
           </label>
           <label>
             <span>Phone*</span>
             <input name="phone" type="tel" placeholder="+1 (555) 123-4567" required />
+            <small class="field-error"></small>
           </label>
           <label>
             <span>Address*</span>
@@ -378,6 +374,7 @@
               placeholder="456 Floral Ave, Sydney NSW 2000 AU"
               required
             />
+            <small class="field-error"></small>
           </label>
           <label>
             <span>Message</span>

@@ -1518,131 +1518,39 @@ body.is-locked {
 }
 
 /* =========================
-   Scope 2 polish — UI kit and requested layout
+   Final layout refinements
    ========================= */
 
-/* Minimal catalogue controls: no tinted panel or outer frame. */
+/* Minimal catalogue controls: no tinted panel and no outer frame. */
 .catalogue-tools {
-  margin-bottom: 40px;
   padding: 0;
   border: 0;
   border-radius: 0;
   background: transparent;
 }
 
-/* UI-kit form states. */
-.catalogue-tools input,
-.catalogue-tools select,
-.subscribe-form input,
-.order-form input,
-.order-form textarea,
-.quantity-input {
-  border-color: rgba(3, 12, 1, 0.15);
-  box-shadow: none;
+/* Minimal footer subscription block. */
+.subscribe-form {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
-.catalogue-tools input:hover,
-.catalogue-tools select:hover,
-.subscribe-form input:hover,
-.order-form input:hover,
-.order-form textarea:hover,
-.quantity-input:hover {
-  border-color: rgba(3, 12, 1, 0.45);
-}
-
-.catalogue-tools input:focus,
-.catalogue-tools select:focus,
-.subscribe-form input:focus,
-.order-form input:focus,
-.order-form textarea:focus,
-.quantity-input:focus {
-  border-color: var(--color-text);
-  box-shadow: none;
-}
-
-.form-field.is-invalid input,
-.form-field.is-invalid textarea,
-.subscribe-form.is-invalid input,
-.agreement.is-invalid .custom-checkbox {
-  border-color: #c62828;
-}
-
-.field-error {
-  margin-top: 4px;
-  color: #c62828;
-  font-size: 12px;
-  line-height: 1.4;
-}
-
-/* UI-kit button states. */
-.button {
-  transition:
-    background-color var(--transition),
-    color var(--transition),
-    transform var(--transition),
-    opacity var(--transition);
-}
-
-.button:hover,
-.button:focus-visible {
-  transform: scale(1.035);
-}
-
-.button:active,
-.button.is-clicked {
-  background: #353c3a;
-  color: #ffffff;
-  transform: scale(1);
-}
-
-.button:disabled,
-.button.is-disabled {
-  cursor: not-allowed;
-  background: #e5e6e5;
-  color: rgba(3, 12, 1, 0.4);
-  opacity: 1;
-  transform: none;
-}
-
-/* Slider controls are centered; arrows are desktop-only. */
+/* Slider navigation is centered. Arrows are desktop-only. */
 .slider-controls {
+  width: 100%;
   align-items: center;
   justify-content: center;
   text-align: center;
 }
 
-.slider-arrows,
-.feedback-arrows {
+.slider-dots {
   justify-content: center;
 }
 
-.slider-arrows button,
-.feedback-arrows button {
-  transition:
-    background-color var(--transition),
-    border-color var(--transition),
-    opacity var(--transition),
-    transform var(--transition);
-}
-
-.slider-arrows button:hover:not(:disabled),
-.slider-arrows button:focus-visible:not(:disabled),
-.feedback-arrows button:hover:not(:disabled),
-.feedback-arrows button:focus-visible:not(:disabled) {
-  transform: scale(1.06);
-}
-
-.slider-arrows button:active:not(:disabled),
-.feedback-arrows button:active:not(:disabled) {
-  background-color: rgba(66, 237, 19, 0.2);
-  border-color: rgba(66, 237, 19, 0.45);
-  transform: scale(1);
-}
-
-.slider-arrows button:disabled,
-.feedback-arrows button:disabled {
-  cursor: not-allowed;
-  opacity: 0.28;
+.slider-arrows {
+  justify-content: center;
 }
 
 @media (max-width: 1439px) {
@@ -1651,84 +1559,85 @@ body.is-locked {
   }
 }
 
-/* Contact: text details on top, full-width image below at every breakpoint. */
-.contacts .contacts-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-areas:
-    "copy"
-    "image";
-  align-items: stretch;
+@media (min-width: 1440px) {
+  .slider-controls {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .slider-arrows {
+    display: flex;
+  }
+}
+
+/* Contact: information on top, full-width image underneath, as in Figma. */
+.contacts-grid {
+  display: flex;
+  flex-direction: column;
   gap: 40px;
 }
 
-.contacts .contact-copy {
-  grid-area: copy;
+.contact-content {
   display: grid;
-  grid-template-columns: 1fr;
+  gap: 32px;
+}
+
+.contact-copy {
   max-width: none;
 }
 
-.contacts .contact-image {
-  grid-area: image;
+.contact-list {
+  margin: 0;
+}
+
+.contact-image {
   width: 100%;
-  max-width: none;
-  height: auto;
-  aspect-ratio: 1280 / 520;
+  max-height: none;
+  aspect-ratio: 1280 / 572;
   object-fit: cover;
-  object-position: center;
+  border-radius: 16px;
 }
 
 @media (min-width: 768px) {
-  .contacts .contact-copy {
+  .contacts-grid {
+    gap: 48px;
+  }
+
+  .contact-content {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    column-gap: 56px;
-  }
-
-  .contacts .eyebrow,
-  .contacts .contact-copy h2,
-  .contacts .contact-intro {
-    grid-column: 1;
-  }
-
-  .contacts .contact-list {
-    grid-column: 2;
-    grid-row: 1 / span 3;
-    align-self: center;
+    align-items: start;
+    gap: 48px;
   }
 }
 
-/* Footer subscription remains minimal. */
-.subscribe-form {
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
+@media (min-width: 1440px) {
+  .contacts-grid {
+    gap: 48px;
+  }
+
+  .contact-content {
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+  }
 }
 
-.subscribe-row input {
-  background: transparent;
-}
-
-/* Large, unframed social icons. */
+/* Social icons: larger, unframed, directly below the subscription. */
 .socials {
-  align-items: center;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
 }
 
 .socials a {
+  display: grid;
   width: 32px;
   height: 32px;
   padding: 0;
+  place-items: center;
   border: 0;
   border-radius: 0;
   background: transparent;
-}
-
-.socials a:hover,
-.socials a:focus-visible {
-  background: transparent;
-  transform: scale(1.12);
+  transition: opacity var(--transition), transform var(--transition);
 }
 
 .socials svg {
@@ -1736,103 +1645,96 @@ body.is-locked {
   height: 32px;
 }
 
-/* Tablet/mobile order: logo, links, subscription, then social icons. */
-@media (max-width: 1439px) {
-  .footer-top {
-    display: flex;
-    flex-direction: column;
-  }
+.socials a:hover,
+.socials a:focus-visible {
+  background: transparent;
+  opacity: 0.65;
+  transform: translateY(-2px);
+}
 
-  .footer-logo {
-    order: 1;
+@media (min-width: 768px) {
+  .socials {
+    align-self: center;
+  }
+}
+
+@media (min-width: 1440px) {
+  .footer-top {
+    grid-template-columns: 220px minmax(0, 1fr);
   }
 
   .footer-center {
-    order: 2;
+    align-items: stretch;
   }
 
   .socials {
-    order: 3;
-    margin-top: 4px;
-  }
-}
-
-/* Desktop keeps the large Flora logo on the left. */
-@media (min-width: 1440px) {
-  .footer-top {
-    grid-template-columns: 220px minmax(0, 1fr) auto;
-  }
-
-  .footer-logo img {
-    width: 180px;
-    height: auto;
-  }
-
-  .socials {
-    align-self: end;
+    align-self: flex-start;
+    justify-self: auto;
+    justify-content: flex-start;
   }
 }
 
 
-/* Final scope 2 corrections */
+/* Final interaction corrections */
 .slider-arrows button:hover:not(:disabled),
 .slider-arrows button:focus-visible:not(:disabled),
 .feedback-arrows button:hover:not(:disabled),
 .feedback-arrows button:focus-visible:not(:disabled) {
-  border-color: var(--color-text);
   background-color: var(--color-white);
+  border-color: var(--color-text);
   transform: scale(1.06);
 }
 
+.slider-arrows button:active:not(:disabled),
+.feedback-arrows button:active:not(:disabled) {
+  background-color: rgba(66, 237, 19, 0.18);
+}
+
 .slider-arrows button:disabled,
-.feedback-arrows button:disabled {
-  border-color: rgba(3, 12, 1, 0.1);
+.feedback-arrows button:disabled,
+.slider-arrows button:disabled:hover,
+.slider-arrows button:disabled:focus-visible,
+.feedback-arrows button:disabled:hover,
+.feedback-arrows button:disabled:focus-visible {
+  cursor: default;
+  opacity: 0.28;
+  border-color: var(--color-border);
   background-color: var(--color-white);
-  color: rgba(3, 12, 1, 0.25);
-  opacity: 1;
+  transform: none;
 }
 
-.slider-arrows button:disabled img,
-.feedback-arrows button:disabled img {
-  opacity: 0.25;
+.subscribe-form input {
+  background-color: var(--color-white);
 }
 
-.form-field.is-invalid input,
-.form-field.is-invalid textarea,
-.subscribe-form.is-invalid input,
-.subscribe-form input[aria-invalid="true"],
-.order-form input[aria-invalid="true"],
-.order-form textarea[aria-invalid="true"],
-.agreement.is-invalid .custom-checkbox {
-  border-color: #c62828;
+.subscribe-row {
+  align-items: start;
 }
 
-.socials,
-.socials li,
-.socials a {
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
+.subscribe-email-field,
+.agreement-field {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
 }
 
-.socials a {
-  display: block;
-  width: 32px;
-  height: 32px;
+.field-error {
+  min-height: 18px;
+  margin: 0;
+  color: #d92d20;
+  font-size: 12px;
+  line-height: 1.4;
 }
 
-.socials a:hover,
-.socials a:focus-visible {
-  border: 0;
-  background: transparent;
-  transform: scale(1.1);
+.subscribe-form input.is-invalid,
+.order-form input.is-invalid,
+.order-form textarea.is-invalid {
+  border-color: #d92d20;
+  box-shadow: 0 0 0 3px rgba(217, 45, 32, 0.12);
 }
 
-.socials img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+@media (min-width: 768px) {
+  .subscribe-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
 }

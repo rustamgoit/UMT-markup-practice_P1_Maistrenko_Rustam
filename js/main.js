@@ -12,6 +12,7 @@ const state = {
 };
 
 const select = selector => document.querySelector(selector);
+const selectAll = selector => [...document.querySelectorAll(selector)];
 const body = document.body;
 
 const menu = select('[data-menu]');
@@ -91,49 +92,68 @@ function renderBestsellers() {
     items.map(item => productMarkup(item, 'product-card', 405, 320)).join(''),
   );
   renderBestsellerDots();
-  window.setTimeout(refreshSliderButtons, 0);
 }
 
-function getBestsellerItemsPerPage() {
-  if (window.matchMedia('(min-width: 1440px)').matches) return 3;
-  if (window.matchMedia('(min-width: 768px)').matches) return 2;
+function getVisibleBestsellerCount() {
+  if (window.innerWidth >= 1440) return 3;
+  if (window.innerWidth >= 768) return 2;
   return 1;
 }
 
 function getBestsellerPageCount() {
-  const itemCount = document.querySelectorAll('[data-bestseller-list] .product-card').length;
-  return Math.max(1, Math.ceil(itemCount / getBestsellerItemsPerPage()));
+  const count = selectAll('[data-bestseller-list] .product-card').length;
+  return Math.max(1, Math.ceil(count / getVisibleBestsellerCount()));
 }
 
 function getBestsellerPageWidth() {
-  return bestsellerList?.clientWidth || 0;
+  return select('[data-bestseller-list]')?.clientWidth || 0;
 }
 
-function getCurrentBestsellerPage() {
+function getBestsellerPageIndex() {
+  const list = select('[data-bestseller-list]');
   const pageWidth = getBestsellerPageWidth();
-  if (!bestsellerList || !pageWidth) return 0;
+  if (!list || !pageWidth) return 0;
+
   return Math.min(
     getBestsellerPageCount() - 1,
-    Math.max(0, Math.round(bestsellerList.scrollLeft / pageWidth)),
+    Math.max(0, Math.round(list.scrollLeft / pageWidth)),
   );
 }
 
-function updateBestsellerDots() {
-  const currentPage = getCurrentBestsellerPage();
-  document.querySelectorAll('[data-bestseller-dots] button').forEach((dot, index) => {
-    dot.classList.toggle('active', index === currentPage);
-    dot.setAttribute('aria-current', index === currentPage ? 'true' : 'false');
+function updateBestsellerControls() {
+  const pageIndex = getBestsellerPageIndex();
+  const pageCount = getBestsellerPageCount();
+
+  selectAll('[data-bestseller-dots] button').forEach((dot, index) => {
+    dot.classList.toggle('active', index === pageIndex);
   });
+
+  const previousButton = select('[data-bestseller-prev]');
+  const nextButton = select('[data-bestseller-next]');
+  if (previousButton) previousButton.disabled = pageIndex === 0;
+  if (nextButton) nextButton.disabled = pageIndex >= pageCount - 1;
 }
 
 function renderBestsellerDots() {
   const dots = select('[data-bestseller-dots]');
-  if (!dots) return;
   const pageCount = getBestsellerPageCount();
+
   dots.innerHTML = Array.from(
     { length: pageCount },
-    (_, index) => `<button type="button" aria-label="Go to bestseller page ${index + 1}" data-bestseller-dot="${index}"${index === 0 ? ' class="active" aria-current="true"' : ''}></button>`,
+    (_, index) =>
+      `<button type="button" aria-label="Go to bestseller page ${index + 1}" data-bestseller-dot="${index}"${index === 0 ? ' class="active"' : ''}></button>`,
   ).join('');
+
+  updateBestsellerControls();
+}
+
+function goToBestsellerPage(pageIndex) {
+  const list = select('[data-bestseller-list]');
+  const safeIndex = Math.min(getBestsellerPageCount() - 1, Math.max(0, pageIndex));
+  list?.scrollTo({
+    left: safeIndex * getBestsellerPageWidth(),
+    behavior: 'smooth',
+  });
 }
 
 function getFilteredBouquets() {
@@ -214,7 +234,6 @@ function renderReviews() {
       )
       .join(''),
   );
-  window.setTimeout(refreshSliderButtons, 0);
 }
 
 select('[data-load-more]')?.addEventListener('click', () => {
@@ -231,24 +250,40 @@ select('[data-filter-form]')?.addEventListener('submit', event => {
 
 const bestsellerList = select('[data-bestseller-list]');
 select('[data-bestseller-prev]')?.addEventListener('click', () => {
-  bestsellerList.scrollTo({ left: Math.max(0, (getCurrentBestsellerPage() - 1) * getBestsellerPageWidth()), behavior: 'smooth' });
+  goToBestsellerPage(getBestsellerPageIndex() - 1);
 });
 select('[data-bestseller-next]')?.addEventListener('click', () => {
-  bestsellerList.scrollTo({ left: Math.min(getBestsellerPageCount() - 1, getCurrentBestsellerPage() + 1) * getBestsellerPageWidth(), behavior: 'smooth' });
+  goToBestsellerPage(getBestsellerPageIndex() + 1);
 });
 select('[data-bestseller-dots]')?.addEventListener('click', event => {
   const dot = event.target.closest('[data-bestseller-dot]');
   if (!dot) return;
-  bestsellerList.scrollTo({ left: Number(dot.dataset.bestsellerDot) * getBestsellerPageWidth(), behavior: 'smooth' });
+  goToBestsellerPage(Number(dot.dataset.bestsellerDot));
 });
-bestsellerList?.addEventListener('scroll', () => window.requestAnimationFrame(updateBestsellerDots));
+bestsellerList?.addEventListener('scroll', () => {
+  window.requestAnimationFrame(updateBestsellerControls);
+});
 
 const feedbackList = select('[data-feedback-list]');
+
+function updateFeedbackControls() {
+  if (!feedbackList) return;
+  const maxScroll = Math.max(0, feedbackList.scrollWidth - feedbackList.clientWidth);
+  const previousButton = select('[data-feedback-prev]');
+  const nextButton = select('[data-feedback-next]');
+
+  if (previousButton) previousButton.disabled = feedbackList.scrollLeft <= 2;
+  if (nextButton) nextButton.disabled = feedbackList.scrollLeft >= maxScroll - 2;
+}
+
 select('[data-feedback-prev]')?.addEventListener('click', () => {
   feedbackList.scrollBy({ left: -feedbackList.clientWidth, behavior: 'smooth' });
 });
 select('[data-feedback-next]')?.addEventListener('click', () => {
   feedbackList.scrollBy({ left: feedbackList.clientWidth, behavior: 'smooth' });
+});
+feedbackList?.addEventListener('scroll', () => {
+  window.requestAnimationFrame(updateFeedbackControls);
 });
 
 function openProduct(productId) {
@@ -323,12 +358,29 @@ document.addEventListener('keydown', event => {
   setModal(orderBackdrop, false);
 });
 
+function setFieldError(input, message) {
+  input.classList.toggle('is-invalid', Boolean(message));
+  input.setAttribute('aria-invalid', String(Boolean(message)));
+  const error = input.closest('label')?.querySelector('.field-error');
+  if (error) error.textContent = message;
+}
+
 select('[data-order-form]')?.addEventListener('submit', event => {
   event.preventDefault();
   const form = event.currentTarget;
+  const requiredInputs = [...form.querySelectorAll('input[required]')];
+  let isValid = true;
+
+  requiredInputs.forEach(input => {
+    const message = input.value.trim() ? '' : `Please enter your ${input.name}.`;
+    setFieldError(input, message);
+    if (message) isValid = false;
+  });
+
+  if (!isValid) return;
+
   const payload = Object.fromEntries(new FormData(form));
   const message = select('[data-order-message]');
-
   message.textContent = `Thank you, ${payload.name}! Your order request has been received.`;
   form.reset();
 
@@ -338,14 +390,53 @@ select('[data-order-form]')?.addEventListener('submit', event => {
   }, 1400);
 });
 
+select('[data-order-form]')?.addEventListener('input', event => {
+  if (event.target.matches('input[required]')) setFieldError(event.target, '');
+});
+
 select('[data-subscribe-form]')?.addEventListener('submit', event => {
   event.preventDefault();
   const form = event.currentTarget;
-  const email = new FormData(form).get('email');
+  const emailInput = form.elements.email;
+  const agreementInput = form.elements.agreement;
+  const emailError = select('[data-email-error]');
+  const agreementError = select('[data-agreement-error]');
   const message = select('[data-subscribe-message]');
 
-  message.textContent = `Thanks! Floral updates will be sent to ${email}.`;
+  const emailIsEmpty = !emailInput.value.trim();
+  const emailIsInvalid = !emailIsEmpty && !emailInput.validity.valid;
+  const emailHasError = emailIsEmpty || emailIsInvalid;
+
+  emailInput.classList.toggle('is-invalid', emailHasError);
+  emailInput.setAttribute('aria-invalid', String(emailHasError));
+  emailError.textContent = emailIsEmpty
+    ? 'Please enter your email.'
+    : emailIsInvalid
+      ? 'Please enter a valid email.'
+      : '';
+
+  agreementError.textContent = agreementInput.checked
+    ? ''
+    : 'Please accept the privacy policy.';
+
+  if (emailHasError || !agreementInput.checked) return;
+
+  message.textContent = `Thanks! Floral updates will be sent to ${emailInput.value}.`;
   form.reset();
+  emailInput.classList.remove('is-invalid');
+  emailInput.setAttribute('aria-invalid', 'false');
+});
+
+select('[data-subscribe-form]')?.addEventListener('input', event => {
+  if (event.target.name === 'email') {
+    event.target.classList.remove('is-invalid');
+    event.target.setAttribute('aria-invalid', 'false');
+    select('[data-email-error]').textContent = '';
+  }
+
+  if (event.target.name === 'agreement') {
+    select('[data-agreement-error]').textContent = '';
+  }
 });
 
 async function init() {
@@ -357,6 +448,8 @@ async function init() {
     renderBestsellers();
     renderBouquets({ reset: true });
     renderReviews();
+    updateBestsellerControls();
+    updateFeedbackControls();
   } catch {
     bestsellerStatus.hidden = false;
     bestsellerStatus.textContent = 'Could not load bestsellers. Please try again later.';
@@ -368,120 +461,8 @@ async function init() {
 
 init();
 
-/* UI-kit states and form validation */
-function setClickedState(button) {
-  if (!button) return;
-  button.classList.add('is-clicked');
-  window.setTimeout(() => button.classList.remove('is-clicked'), 180);
-}
-
-document.addEventListener('click', event => {
-  const button = event.target.closest('.button');
-  if (button && !button.disabled) setClickedState(button);
-});
-
-function setFieldError(field, message) {
-  const wrapper = field.closest('.form-field') || field.closest('form');
-  if (!wrapper) return;
-  wrapper.classList.add('is-invalid');
-  field.setAttribute('aria-invalid', 'true');
-  let error = wrapper.querySelector('.field-error');
-  if (!error) {
-    error = document.createElement('span');
-    error.className = 'field-error';
-    field.insertAdjacentElement('afterend', error);
-  }
-  error.textContent = message;
-}
-
-function clearFieldError(field) {
-  const wrapper = field.closest('.form-field') || field.closest('form');
-  wrapper?.classList.remove('is-invalid');
-  field.removeAttribute('aria-invalid');
-  wrapper?.querySelector('.field-error')?.remove();
-}
-
-function validateRequiredField(field) {
-  const value = field.value.trim();
-  if (!value) {
-    setFieldError(field, `Please enter ${field.name === 'address' ? 'your address' : `your ${field.name}`}.`);
-    return false;
-  }
-  if (field.type === 'email' && !field.validity.valid) {
-    setFieldError(field, 'Please enter a valid email address.');
-    return false;
-  }
-  clearFieldError(field);
-  return true;
-}
-
-const selectAllRequired = form => Array.from(form.querySelectorAll('[required]'));
-
-const orderFormElement = select('[data-order-form]');
-orderFormElement?.querySelectorAll('input, textarea').forEach(field => {
-  field.addEventListener('input', () => clearFieldError(field));
-});
-
-orderFormElement?.addEventListener('submit', event => {
-  const fields = selectAllRequired(event.currentTarget);
-  const valid = fields.every(validateRequiredField);
-  if (!valid) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    fields.find(field => field.getAttribute('aria-invalid') === 'true')?.focus();
-  }
-}, true);
-
-const subscribeFormElement = select('[data-subscribe-form]');
-subscribeFormElement?.querySelectorAll('input').forEach(field => {
-  field.addEventListener('input', () => clearFieldError(field));
-  field.addEventListener('change', () => {
-    field.closest('.agreement')?.classList.remove('is-invalid');
-    field.closest('.agreement')?.querySelector('.field-error')?.remove();
-  });
-});
-
-subscribeFormElement?.addEventListener('submit', event => {
-  const email = event.currentTarget.elements.email;
-  const agreement = event.currentTarget.elements.agreement;
-  let valid = validateRequiredField(email);
-  if (!agreement.checked) {
-    const wrapper = agreement.closest('.agreement');
-    wrapper.classList.add('is-invalid');
-    if (!wrapper.querySelector('.field-error')) {
-      wrapper.insertAdjacentHTML('beforeend', '<span class="field-error">Please accept the privacy policy.</span>');
-    }
-    valid = false;
-  }
-  if (!valid) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    (email.getAttribute('aria-invalid') === 'true' ? email : agreement).focus();
-  }
-}, true);
-
-function updateHorizontalControls(list, previousButton, nextButton) {
-  if (!list || !previousButton || !nextButton) return;
-  const maxScroll = Math.max(0, list.scrollWidth - list.clientWidth);
-  previousButton.disabled = list.scrollLeft <= 2;
-  nextButton.disabled = list.scrollLeft >= maxScroll - 2;
-}
-
-const bestsellerPrevious = select('[data-bestseller-prev]');
-const bestsellerNext = select('[data-bestseller-next]');
-const feedbackPrevious = select('[data-feedback-prev]');
-const feedbackNext = select('[data-feedback-next]');
-
-function refreshSliderButtons() {
-  updateHorizontalControls(bestsellerList, bestsellerPrevious, bestsellerNext);
-  updateHorizontalControls(feedbackList, feedbackPrevious, feedbackNext);
-}
-
-bestsellerList?.addEventListener('scroll', () => window.requestAnimationFrame(refreshSliderButtons));
-feedbackList?.addEventListener('scroll', () => window.requestAnimationFrame(refreshSliderButtons));
 window.addEventListener('resize', () => {
   renderBestsellerDots();
-  updateBestsellerDots();
-  refreshSliderButtons();
+  goToBestsellerPage(0);
+  updateFeedbackControls();
 });
-window.setTimeout(refreshSliderButtons, 300);
