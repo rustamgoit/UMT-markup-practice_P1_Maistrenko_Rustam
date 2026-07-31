@@ -1,39 +1,79 @@
-const body=document.body;
-const menu=document.querySelector('[data-menu]');
-const openButton=document.querySelector('[data-menu-open]');
-const closeButton=document.querySelector('[data-menu-close]');
-const setMenuState=(open)=>{menu.classList.toggle('is-open',open);body.classList.toggle('menu-open',open);menu.setAttribute('aria-hidden',String(!open));openButton.setAttribute('aria-expanded',String(open))};
-openButton?.addEventListener('click',()=>setMenuState(true));closeButton?.addEventListener('click',()=>setMenuState(false));menu?.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setMenuState(false)));
+const body = document.body;
+const menu = document.querySelector("[data-menu]");
+const openMenuButton = document.querySelector("[data-menu-open]");
+const closeMenuButton = document.querySelector("[data-menu-close]");
 
-const topProducts=document.querySelector('.top-products');
-const dots=[...document.querySelectorAll('.dots span')];
-const cards=[...(topProducts?.children||[])];
-const cardsPerView=()=>window.innerWidth>=1440?3:window.innerWidth>=768?2:1;
-const updateDots=()=>{if(!topProducts)return;const card=cards.reduce((best,c,i)=>Math.abs(c.offsetLeft-topProducts.scrollLeft)<best.d?{i,d:Math.abs(c.offsetLeft-topProducts.scrollLeft)}:best,{i:0,d:Infinity});const page=Math.floor(card.i/cardsPerView());dots.forEach((d,i)=>d.classList.toggle('active',i===page))};
-topProducts?.addEventListener('scroll',updateDots,{passive:true});window.addEventListener('resize',updateDots);
-document.querySelectorAll('.arrows button').forEach((b,i)=>b.addEventListener('click',()=>topProducts.scrollBy({left:(i?1:-1)*topProducts.clientWidth,behavior:'smooth'})));
+const setMenuState = isOpen => {
+  menu?.classList.toggle("is-open", isOpen);
+  body.classList.toggle("menu-open", isOpen);
+  menu?.setAttribute("aria-hidden", String(!isOpen));
+  openMenuButton?.setAttribute("aria-expanded", String(isOpen));
+};
 
-const showMore=document.querySelector('[data-show-more]');showMore?.addEventListener('click',()=>{showMore.textContent=showMore.textContent==='Show More'?'Show Less':'Show More'});
+openMenuButton?.addEventListener("click", () => setMenuState(true));
+closeMenuButton?.addEventListener("click", () => setMenuState(false));
+menu?.querySelectorAll("a").forEach(link => {
+  link.addEventListener("click", () => setMenuState(false));
+});
 
-const productModal=document.querySelector('[data-product-modal]');
-const orderModal=document.querySelector('[data-order-modal]');
-const toggleModal=(modal,open)=>{modal.classList.toggle('is-open',open);modal.setAttribute('aria-hidden',String(!open));body.classList.toggle('modal-open',open||document.querySelector('.modal-backdrop.is-open'))};
-document.querySelectorAll('[data-product-open]').forEach(el=>{const open=()=>toggleModal(productModal,true);el.addEventListener('click',open);el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}})});
-document.querySelector('[data-product-close]')?.addEventListener('click',()=>toggleModal(productModal,false));
-document.querySelector('[data-order-open]')?.addEventListener('click',()=>{toggleModal(productModal,false);toggleModal(orderModal,true)});
-document.querySelector('[data-order-close]')?.addEventListener('click',()=>toggleModal(orderModal,false));
-document.querySelectorAll('.modal-backdrop').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)toggleModal(m,false)}));
-document.querySelector('.order-modal')?.addEventListener('submit',e=>e.preventDefault());
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){setMenuState(false);document.querySelectorAll('.modal-backdrop.is-open').forEach(m=>toggleModal(m,false))}});
-updateDots();
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") setMenuState(false);
+});
 
-const feedbackTrack=document.querySelector('.feedback-grid');
-const feedbackCards=[...(feedbackTrack?.children||[])];
-const feedbackDots=[...document.querySelectorAll('.feedback-dots span')];
-const feedbackPerView=()=>window.innerWidth>=1440?3:window.innerWidth>=768?2:1;
-const updateFeedbackDots=()=>{if(!feedbackTrack)return;const nearest=feedbackCards.reduce((best,c,i)=>Math.abs(c.offsetLeft-feedbackTrack.scrollLeft)<best.d?{i,d:Math.abs(c.offsetLeft-feedbackTrack.scrollLeft)}:best,{i:0,d:Infinity});const page=Math.floor(nearest.i/feedbackPerView());feedbackDots.forEach((d,i)=>d.classList.toggle('active',i===page))};
-feedbackTrack?.addEventListener('scroll',updateFeedbackDots,{passive:true});
-window.addEventListener('resize',updateFeedbackDots);
-document.querySelector('[data-feedback-prev]')?.addEventListener('click',()=>feedbackTrack.scrollBy({left:-feedbackTrack.clientWidth,behavior:'smooth'}));
-document.querySelector('[data-feedback-next]')?.addEventListener('click',()=>feedbackTrack.scrollBy({left:feedbackTrack.clientWidth,behavior:'smooth'}));
-updateFeedbackDots();
+const createSlider = ({ trackSelector, prevSelector, nextSelector, dotsSelector }) => {
+  const track = document.querySelector(trackSelector);
+  const prev = document.querySelector(prevSelector);
+  const next = document.querySelector(nextSelector);
+  const dots = [...document.querySelectorAll(dotsSelector)];
+
+  if (!track) return;
+
+  const scroll = direction => {
+    track.scrollBy({ left: direction * track.clientWidth, behavior: "smooth" });
+  };
+
+  prev?.addEventListener("click", () => scroll(-1));
+  next?.addEventListener("click", () => scroll(1));
+
+  if (dots.length) {
+    const updateDots = () => {
+      const cards = [...track.children];
+      const nearest = cards.reduce(
+        (best, card, index) => {
+          const distance = Math.abs(card.offsetLeft - track.scrollLeft);
+          return distance < best.distance ? { index, distance } : best;
+        },
+        { index: 0, distance: Infinity },
+      );
+
+      dots.forEach((dot, index) => {
+        dot.classList.toggle("active", index === nearest.index);
+      });
+    };
+
+    track.addEventListener("scroll", updateDots, { passive: true });
+    window.addEventListener("resize", updateDots);
+    updateDots();
+  }
+};
+
+createSlider({
+  trackSelector: "[data-bestseller-track]",
+  prevSelector: "[data-bestseller-prev]",
+  nextSelector: "[data-bestseller-next]",
+  dotsSelector: ".slider-dots span",
+});
+
+createSlider({
+  trackSelector: "[data-feedback-track]",
+  prevSelector: "[data-feedback-prev]",
+  nextSelector: "[data-feedback-next]",
+  dotsSelector: ".feedback-does-not-use-dots",
+});
+
+const showMoreButton = document.querySelector("[data-show-more]");
+showMoreButton?.addEventListener("click", () => {
+  const expanded = showMoreButton.getAttribute("aria-expanded") === "true";
+  showMoreButton.setAttribute("aria-expanded", String(!expanded));
+  showMoreButton.textContent = expanded ? "Show More" : "Show Less";
+});

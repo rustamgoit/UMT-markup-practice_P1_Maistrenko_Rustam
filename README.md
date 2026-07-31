@@ -1,29 +1,19 @@
 # Flora
 
-Adaptive flower-shop landing page created from the Flora Figma layout.
+Adaptive landing page for a flower shop, created from the Flora Figma layout.
 
-## Features
+## Technologies
 
 - Semantic HTML5
-- Mobile-first responsive layout for 375px, 768px and 1440px
-- `modern-normalize`
-- CSS custom properties
-- Full-height mobile menu opened with the `.is-open` class
-- Optimized responsive images
-- Hover/focus transitions
-- GitHub Pages ready
+- Mobile-first CSS
+- JavaScript for the mobile menu and sliders
+- modern-normalize
+- Animate.css
+- Optimized WebP images
+- SVG sprite
 
-## Project structure
+## Breakpoints
 
-```text
-flora/
-├── css/styles.css
-├── images/
-├── js/main.js
-├── index.html
-└── README.md
-```
-
-## Run locally
-
-Open `index.html` in a browser or use Live Server in VS Code.
+- Mobile: 375px
+- Tablet: 768px
+- Desktop: 1440px
