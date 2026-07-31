@@ -1,71 +1,311 @@
 const API_URL = './db.json';
-const state = { page: 1, limit: 4, query: '', category: '', loadedIds: new Set(), currentProduct: null };
-const $ = selector => document.querySelector(selector);
+
+const state = {
+  page: 1,
+  limit: 4,
+  query: '',
+  category: '',
+  loadedIds: new Set(),
+  products: [],
+  reviews: [],
+  currentProduct: null,
+};
+
+const select = selector => document.querySelector(selector);
 const body = document.body;
 
-function setBodyLock(locked){body.classList.toggle('is-locked', locked)}
-function toggleLayer(layer, open){layer.classList.toggle('is-open', open);layer.setAttribute('aria-hidden', String(!open));setBodyLock(open)}
+const menu = select('[data-menu]');
+const productBackdrop = select('[data-product-backdrop]');
+const orderBackdrop = select('[data-order-backdrop]');
 
-const menu=$('[data-menu]');
-$('[data-menu-open]')?.addEventListener('click',()=>{menu.classList.add('is-open');menu.setAttribute('aria-hidden','false');setBodyLock(true)});
-$('[data-menu-close]')?.addEventListener('click',()=>{menu.classList.remove('is-open');menu.setAttribute('aria-hidden','true');setBodyLock(false)});
-menu?.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{menu.classList.remove('is-open');setBodyLock(false)}));
+function updateBodyLock() {
+  const menuIsOpen = menu?.classList.contains('is-open');
+  const modalIsOpen = document.querySelector('.backdrop.is-open');
+  body.classList.toggle('is-locked', Boolean(menuIsOpen || modalIsOpen));
+}
 
-async function getData(){
-  const response = await axios.get(API_URL);
+function setMenu(open) {
+  const openButton = select('[data-menu-open]');
+  menu?.classList.toggle('is-open', open);
+  menu?.setAttribute('aria-hidden', String(!open));
+  openButton?.setAttribute('aria-expanded', String(open));
+  updateBodyLock();
+}
+
+function setModal(layer, open) {
+  layer?.classList.toggle('is-open', open);
+  layer?.setAttribute('aria-hidden', String(!open));
+  updateBodyLock();
+}
+
+select('[data-menu-open]')?.addEventListener('click', () => setMenu(true));
+select('[data-menu-close]')?.addEventListener('click', () => setMenu(false));
+menu?.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => setMenu(false));
+});
+
+async function requestData(params = {}) {
+  const response = await axios.get(API_URL, { params });
   return response.data;
 }
 
-function productMarkup(product, className){
-  return `<li class="${className}" data-product-id="${product.id}" tabindex="0">
-    <img src="${product.image}" srcset="${product.image} 1x, ${product.image2x} 2x" width="405" height="320" alt="${product.name} bouquet" loading="lazy" decoding="async">
-    <h3>${product.name}</h3><p class="price">$${product.price}</p></li>`;
+function productMarkup(product, cardClass, imageWidth, imageHeight) {
+  return `
+    <li class="${cardClass}">
+      <button class="card-button" type="button" data-product-id="${product.id}">
+        <img
+          src="${product.image}"
+          srcset="${product.image} 1x, ${product.image2x} 2x"
+          width="${imageWidth}"
+          height="${imageHeight}"
+          alt="${product.name} bouquet"
+          loading="lazy"
+          decoding="async"
+        />
+        <h3>${product.name}</h3>
+        <p class="price">$${product.price}</p>
+      </button>
+    </li>`;
 }
 
-async function renderBestsellers(){
-  const list=$('[data-bestseller-list]'); const status=$('[data-bestseller-status]');
-  try{const {products}=await getData();const items=products.filter(p=>p.bestseller);list.insertAdjacentHTML('beforeend',items.map(p=>productMarkup(p,'product-card')).join(''));}
-  catch(error){status.hidden=false;status.textContent='Could not load bestsellers. Please try again later.';console.error('Bestsellers request failed:',error.message)}
+async function loadInitialData() {
+  const data = await requestData({ page: 1, limit: state.limit });
+  state.products = Array.isArray(data.products) ? data.products : [];
+  state.reviews = Array.isArray(data.reviews) ? data.reviews : [];
 }
 
-async function renderBouquets({reset=false}={}){
-  const list=$('[data-bouquet-list]'); const status=$('[data-bouquet-status]'); const more=$('[data-load-more]');
-  if(reset){state.page=1;state.loadedIds.clear();list.innerHTML='';more.hidden=false}
-  status.hidden=true; more.disabled=true; more.textContent='Loading...';
-  try{
-    const {products}=await getData();
-    const source=products.filter(p=>!p.bestseller).filter(p=>!state.query||p.name.toLowerCase().includes(state.query.toLowerCase())).filter(p=>!state.category||p.category===state.category);
-    const start=(state.page-1)*state.limit; const pageItems=source.slice(start,start+state.limit).filter(p=>!state.loadedIds.has(p.id));
-    if(!pageItems.length){status.hidden=false;status.textContent=state.page===1?'No bouquets found.':'You have reached the end of the collection.';more.hidden=true;return}
-    list.insertAdjacentHTML('beforeend',pageItems.map(p=>productMarkup(p,'bouquet-card')).join(''));pageItems.forEach(p=>state.loadedIds.add(p.id));state.page+=1;
-    more.hidden=state.loadedIds.size>=source.length;
-    if(more.hidden){status.hidden=false;status.textContent='All matching bouquets are loaded.'}
-  }catch(error){status.hidden=false;status.textContent='Could not load bouquets. Please try again.';console.error('Bouquets request failed:',error.message)}finally{more.disabled=false;more.textContent='Load more'}
+function renderBestsellers() {
+  const list = select('[data-bestseller-list]');
+  const status = select('[data-bestseller-status]');
+  const items = state.products.filter(product => product.bestseller);
+
+  if (!items.length) {
+    status.hidden = false;
+    status.textContent = 'Bestsellers are temporarily unavailable.';
+    return;
+  }
+
+  list.innerHTML = '';
+  list.insertAdjacentHTML(
+    'beforeend',
+    items.map(item => productMarkup(item, 'product-card', 405, 320)).join(''),
+  );
 }
 
-async function renderReviews(){const list=$('[data-feedback-list]');try{const {reviews}=await getData();list.insertAdjacentHTML('beforeend',reviews.map(r=>`<li class="quote-card"><blockquote>“${r.text}”</blockquote><p>${r.author}</p></li>`).join(''))}catch(error){console.error('Reviews request failed:',error.message)}}
-
-$('[data-load-more]')?.addEventListener('click',()=>renderBouquets());
-$('[data-filter-form]')?.addEventListener('submit',event=>{event.preventDefault();const data=new FormData(event.currentTarget);state.query=String(data.get('query')||'').trim();state.category=String(data.get('category')||'');renderBouquets({reset:true})});
-
-const feedback=$('[data-feedback-list]');
-$('[data-feedback-prev]')?.addEventListener('click',()=>feedback.scrollBy({left:-feedback.clientWidth,behavior:'smooth'}));
-$('[data-feedback-next]')?.addEventListener('click',()=>feedback.scrollBy({left:feedback.clientWidth,behavior:'smooth'}));
-
-const productBackdrop=$('[data-product-backdrop]'); const orderBackdrop=$('[data-order-backdrop]');
-async function openProduct(id){
-  try{const {products}=await getData();const product=products.find(p=>p.id===Number(id));if(!product)return;state.currentProduct=product;
-    $('[data-product-content]').innerHTML=`<div class="product-layout"><img src="${product.image}" srcset="${product.image} 1x, ${product.image2x} 2x" width="536" height="572" alt="${product.name} bouquet"><div class="product-info"><h2 id="product-title">${product.name}</h2><p class="price">$${product.price}</p><p class="product-description">${product.description}</p><div class="buy-row"><button class="button" type="button" data-buy-now>Buy now</button><input class="quantity-input" type="number" min="1" max="20" value="1" aria-label="Quantity"></div></div></div>`;
-    toggleLayer(productBackdrop,true);$('[data-buy-now]').addEventListener('click',()=>{const q=$('.quantity-input').value;toggleLayer(productBackdrop,false);const form=$('[data-order-form]');form.elements.productId.value=product.id;form.elements.quantity.value=q;toggleLayer(orderBackdrop,true)})
-  }catch(error){console.error('Product request failed:',error.message)}
+function getFilteredBouquets() {
+  return state.products
+    .filter(product => !product.bestseller)
+    .filter(product => {
+      return !state.query || product.name.toLowerCase().includes(state.query.toLowerCase());
+    })
+    .filter(product => !state.category || product.category === state.category);
 }
-document.addEventListener('click',event=>{const card=event.target.closest('[data-product-id]');if(card)openProduct(card.dataset.productId)});
-document.addEventListener('keydown',event=>{if((event.key==='Enter'||event.key===' ')&&event.target.matches('[data-product-id]'))openProduct(event.target.dataset.productId);if(event.key==='Escape'){toggleLayer(productBackdrop,false);toggleLayer(orderBackdrop,false)}});
-$('[data-product-close]')?.addEventListener('click',()=>toggleLayer(productBackdrop,false));
-$('[data-order-close]')?.addEventListener('click',()=>toggleLayer(orderBackdrop,false));
-[productBackdrop,orderBackdrop].forEach(layer=>layer?.addEventListener('click',event=>{if(event.target===layer)toggleLayer(layer,false)}));
 
-$('[data-order-form]')?.addEventListener('submit',event=>{event.preventDefault();const form=event.currentTarget;const payload=Object.fromEntries(new FormData(form));$('[data-order-message]').textContent=`Thank you, ${payload.name}! Your order request has been received.`;form.reset();setTimeout(()=>toggleLayer(orderBackdrop,false),1200)});
-$('[data-subscribe-form]')?.addEventListener('submit',event=>{event.preventDefault();const form=event.currentTarget;const email=new FormData(form).get('email');$('[data-subscribe-message]').textContent=`Thanks! Updates will be sent to ${email}.`;form.reset()});
+function renderBouquets({ reset = false } = {}) {
+  const list = select('[data-bouquet-list]');
+  const status = select('[data-bouquet-status]');
+  const loadMoreButton = select('[data-load-more]');
 
-await Promise.all([renderBestsellers(),renderBouquets({reset:true}),renderReviews()]);
+  if (reset) {
+    state.page = 1;
+    state.loadedIds.clear();
+    list.innerHTML = '';
+    loadMoreButton.hidden = false;
+  }
+
+  status.hidden = true;
+  const filteredProducts = getFilteredBouquets();
+  const startIndex = (state.page - 1) * state.limit;
+  const pageItems = filteredProducts
+    .slice(startIndex, startIndex + state.limit)
+    .filter(product => !state.loadedIds.has(product.id));
+
+  if (!pageItems.length) {
+    status.hidden = false;
+    status.textContent =
+      state.page === 1
+        ? 'No bouquets match your search. Try another name or occasion.'
+        : 'You have reached the end of the collection.';
+    loadMoreButton.hidden = true;
+    return;
+  }
+
+  list.insertAdjacentHTML(
+    'beforeend',
+    pageItems.map(item => productMarkup(item, 'bouquet-card', 296, 296)).join(''),
+  );
+
+  pageItems.forEach(product => state.loadedIds.add(product.id));
+  state.page += 1;
+
+  const allLoaded = state.loadedIds.size >= filteredProducts.length;
+  loadMoreButton.hidden = allLoaded;
+
+  if (allLoaded) {
+    status.hidden = false;
+    status.textContent = 'All matching bouquets are displayed.';
+  }
+}
+
+function renderReviews() {
+  const list = select('[data-feedback-list]');
+
+  if (!state.reviews.length) {
+    list.insertAdjacentHTML(
+      'beforeend',
+      '<li class="quote-card"><p>Reviews are temporarily unavailable.</p></li>',
+    );
+    return;
+  }
+
+  list.innerHTML = '';
+  list.insertAdjacentHTML(
+    'beforeend',
+    state.reviews
+      .map(
+        review => `
+          <li class="quote-card">
+            <blockquote>“${review.text}”</blockquote>
+            <p>${review.author}</p>
+          </li>`,
+      )
+      .join(''),
+  );
+}
+
+select('[data-load-more]')?.addEventListener('click', () => {
+  renderBouquets();
+});
+
+select('[data-filter-form]')?.addEventListener('submit', event => {
+  event.preventDefault();
+  const formData = new FormData(event.currentTarget);
+  state.query = String(formData.get('query') || '').trim();
+  state.category = String(formData.get('category') || '');
+  renderBouquets({ reset: true });
+});
+
+const feedbackList = select('[data-feedback-list]');
+select('[data-feedback-prev]')?.addEventListener('click', () => {
+  feedbackList.scrollBy({ left: -feedbackList.clientWidth, behavior: 'smooth' });
+});
+select('[data-feedback-next]')?.addEventListener('click', () => {
+  feedbackList.scrollBy({ left: feedbackList.clientWidth, behavior: 'smooth' });
+});
+
+function openProduct(productId) {
+  const product = state.products.find(item => item.id === Number(productId));
+  if (!product) return;
+
+  state.currentProduct = product;
+  select('[data-product-content]').innerHTML = `
+    <div class="product-layout">
+      <img
+        class="product-picture"
+        src="${product.image}"
+        srcset="${product.image} 1x, ${product.image2x} 2x"
+        width="536"
+        height="572"
+        alt="${product.name} bouquet"
+      />
+      <div class="product-info">
+        <h2 id="product-title">${product.name}</h2>
+        <p class="price">$${product.price}</p>
+        <p class="product-description">${product.description}</p>
+        <div class="buy-row">
+          <button class="button" type="button" data-buy-now>Buy now</button>
+          <input
+            class="quantity-input"
+            type="number"
+            min="1"
+            max="20"
+            value="1"
+            aria-label="Quantity"
+          />
+        </div>
+      </div>
+    </div>`;
+
+  setModal(productBackdrop, true);
+
+  select('[data-buy-now]')?.addEventListener('click', () => {
+    const quantity = select('.quantity-input').value;
+    const orderForm = select('[data-order-form]');
+
+    orderForm.elements.productId.value = product.id;
+    orderForm.elements.quantity.value = quantity;
+
+    setModal(productBackdrop, false);
+    setModal(orderBackdrop, true);
+  });
+}
+
+document.addEventListener('click', event => {
+  const productButton = event.target.closest('[data-product-id]');
+  if (productButton) openProduct(productButton.dataset.productId);
+});
+
+select('[data-product-close]')?.addEventListener('click', () => {
+  setModal(productBackdrop, false);
+});
+select('[data-order-close]')?.addEventListener('click', () => {
+  setModal(orderBackdrop, false);
+});
+
+[productBackdrop, orderBackdrop].forEach(layer => {
+  layer?.addEventListener('click', event => {
+    if (event.target === layer) setModal(layer, false);
+  });
+});
+
+document.addEventListener('keydown', event => {
+  if (event.key !== 'Escape') return;
+  setMenu(false);
+  setModal(productBackdrop, false);
+  setModal(orderBackdrop, false);
+});
+
+select('[data-order-form]')?.addEventListener('submit', event => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const payload = Object.fromEntries(new FormData(form));
+  const message = select('[data-order-message]');
+
+  message.textContent = `Thank you, ${payload.name}! Your order request has been received.`;
+  form.reset();
+
+  window.setTimeout(() => {
+    message.textContent = '';
+    setModal(orderBackdrop, false);
+  }, 1400);
+});
+
+select('[data-subscribe-form]')?.addEventListener('submit', event => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const email = new FormData(form).get('email');
+  const message = select('[data-subscribe-message]');
+
+  message.textContent = `Thanks! Floral updates will be sent to ${email}.`;
+  form.reset();
+});
+
+async function init() {
+  const catalogueStatus = select('[data-bouquet-status]');
+  const bestsellerStatus = select('[data-bestseller-status]');
+
+  try {
+    await loadInitialData();
+    renderBestsellers();
+    renderBouquets({ reset: true });
+    renderReviews();
+  } catch {
+    bestsellerStatus.hidden = false;
+    bestsellerStatus.textContent = 'Could not load bestsellers. Please try again later.';
+    catalogueStatus.hidden = false;
+    catalogueStatus.textContent = 'Could not load bouquets. Please try again later.';
+    select('[data-load-more]').hidden = true;
+  }
+}
+
+init();
