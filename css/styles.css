@@ -1772,3 +1772,67 @@ body.is-locked {
     align-self: end;
   }
 }
+
+
+/* Final scope 2 corrections */
+.slider-arrows button:hover:not(:disabled),
+.slider-arrows button:focus-visible:not(:disabled),
+.feedback-arrows button:hover:not(:disabled),
+.feedback-arrows button:focus-visible:not(:disabled) {
+  border-color: var(--color-text);
+  background-color: var(--color-white);
+  transform: scale(1.06);
+}
+
+.slider-arrows button:disabled,
+.feedback-arrows button:disabled {
+  border-color: rgba(3, 12, 1, 0.1);
+  background-color: var(--color-white);
+  color: rgba(3, 12, 1, 0.25);
+  opacity: 1;
+}
+
+.slider-arrows button:disabled img,
+.feedback-arrows button:disabled img {
+  opacity: 0.25;
+}
+
+.form-field.is-invalid input,
+.form-field.is-invalid textarea,
+.subscribe-form.is-invalid input,
+.subscribe-form input[aria-invalid="true"],
+.order-form input[aria-invalid="true"],
+.order-form textarea[aria-invalid="true"],
+.agreement.is-invalid .custom-checkbox {
+  border-color: #c62828;
+}
+
+.socials,
+.socials li,
+.socials a {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.socials a {
+  display: block;
+  width: 32px;
+  height: 32px;
+}
+
+.socials a:hover,
+.socials a:focus-visible {
+  border: 0;
+  background: transparent;
+  transform: scale(1.1);
+}
+
+.socials img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

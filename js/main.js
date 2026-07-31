@@ -90,30 +90,49 @@ function renderBestsellers() {
     'beforeend',
     items.map(item => productMarkup(item, 'product-card', 405, 320)).join(''),
   );
-  renderBestsellerDots(items.length);
+  renderBestsellerDots();
   window.setTimeout(refreshSliderButtons, 0);
 }
 
-function getBestsellerStep() {
-  const firstCard = select('[data-bestseller-list] .product-card');
-  if (!firstCard) return 0;
-  const gap = Number.parseFloat(getComputedStyle(select('[data-bestseller-list]')).gap) || 0;
-  return firstCard.getBoundingClientRect().width + gap;
+function getBestsellerItemsPerPage() {
+  if (window.matchMedia('(min-width: 1440px)').matches) return 3;
+  if (window.matchMedia('(min-width: 768px)').matches) return 2;
+  return 1;
+}
+
+function getBestsellerPageCount() {
+  const itemCount = document.querySelectorAll('[data-bestseller-list] .product-card').length;
+  return Math.max(1, Math.ceil(itemCount / getBestsellerItemsPerPage()));
+}
+
+function getBestsellerPageWidth() {
+  return bestsellerList?.clientWidth || 0;
+}
+
+function getCurrentBestsellerPage() {
+  const pageWidth = getBestsellerPageWidth();
+  if (!bestsellerList || !pageWidth) return 0;
+  return Math.min(
+    getBestsellerPageCount() - 1,
+    Math.max(0, Math.round(bestsellerList.scrollLeft / pageWidth)),
+  );
 }
 
 function updateBestsellerDots() {
-  const list = select('[data-bestseller-list]');
-  const dots = document.querySelectorAll('[data-bestseller-dots] button');
-  const step = getBestsellerStep();
-  if (!list || !step) return;
-  const index = Math.round(list.scrollLeft / step);
-  dots.forEach((dot, dotIndex) => dot.classList.toggle('active', dotIndex === index));
+  const currentPage = getCurrentBestsellerPage();
+  document.querySelectorAll('[data-bestseller-dots] button').forEach((dot, index) => {
+    dot.classList.toggle('active', index === currentPage);
+    dot.setAttribute('aria-current', index === currentPage ? 'true' : 'false');
+  });
 }
 
-function renderBestsellerDots(count) {
+function renderBestsellerDots() {
   const dots = select('[data-bestseller-dots]');
-  dots.innerHTML = Array.from({ length: count }, (_, index) =>
-    `<button type="button" aria-label="Go to bestseller ${index + 1}" data-bestseller-dot="${index}"${index === 0 ? ' class="active"' : ''}></button>`,
+  if (!dots) return;
+  const pageCount = getBestsellerPageCount();
+  dots.innerHTML = Array.from(
+    { length: pageCount },
+    (_, index) => `<button type="button" aria-label="Go to bestseller page ${index + 1}" data-bestseller-dot="${index}"${index === 0 ? ' class="active" aria-current="true"' : ''}></button>`,
   ).join('');
 }
 
@@ -212,15 +231,15 @@ select('[data-filter-form]')?.addEventListener('submit', event => {
 
 const bestsellerList = select('[data-bestseller-list]');
 select('[data-bestseller-prev]')?.addEventListener('click', () => {
-  bestsellerList.scrollBy({ left: -getBestsellerStep(), behavior: 'smooth' });
+  bestsellerList.scrollTo({ left: Math.max(0, (getCurrentBestsellerPage() - 1) * getBestsellerPageWidth()), behavior: 'smooth' });
 });
 select('[data-bestseller-next]')?.addEventListener('click', () => {
-  bestsellerList.scrollBy({ left: getBestsellerStep(), behavior: 'smooth' });
+  bestsellerList.scrollTo({ left: Math.min(getBestsellerPageCount() - 1, getCurrentBestsellerPage() + 1) * getBestsellerPageWidth(), behavior: 'smooth' });
 });
 select('[data-bestseller-dots]')?.addEventListener('click', event => {
   const dot = event.target.closest('[data-bestseller-dot]');
   if (!dot) return;
-  bestsellerList.scrollTo({ left: Number(dot.dataset.bestsellerDot) * getBestsellerStep(), behavior: 'smooth' });
+  bestsellerList.scrollTo({ left: Number(dot.dataset.bestsellerDot) * getBestsellerPageWidth(), behavior: 'smooth' });
 });
 bestsellerList?.addEventListener('scroll', () => window.requestAnimationFrame(updateBestsellerDots));
 
@@ -460,5 +479,9 @@ function refreshSliderButtons() {
 
 bestsellerList?.addEventListener('scroll', () => window.requestAnimationFrame(refreshSliderButtons));
 feedbackList?.addEventListener('scroll', () => window.requestAnimationFrame(refreshSliderButtons));
-window.addEventListener('resize', refreshSliderButtons);
+window.addEventListener('resize', () => {
+  renderBestsellerDots();
+  updateBestsellerDots();
+  refreshSliderButtons();
+});
 window.setTimeout(refreshSliderButtons, 300);
