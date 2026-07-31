@@ -1803,3 +1803,266 @@ body.is-locked {
     width: 360px;
   }
 }
+
+/* Final alignment corrections */
+@media (min-width: 768px) {
+  .contact-list {
+    padding-left: 32px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .contact-content {
+    grid-template-columns: 600px minmax(0, 1fr);
+    gap: 80px;
+  }
+
+  .contact-list {
+    width: 100%;
+    max-width: 520px;
+    padding-left: 56px;
+    justify-self: end;
+  }
+
+  .footer-navigation-row {
+    justify-content: flex-start;
+  }
+
+  .footer-navigation-row .socials {
+    margin-left: auto;
+    justify-content: flex-end;
+  }
+
+  .subscribe-form {
+    max-width: 680px;
+  }
+
+  .subscribe-row {
+    grid-template-columns: 280px auto;
+  }
+
+  .subscribe-email-field {
+    width: 280px;
+  }
+}
+
+
+/* Final footer alignment — preserve desktop, match tablet/mobile reference. */
+.socials img {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+
+@media (max-width: 1439px) {
+  .footer {
+    padding: 56px 0 28px;
+    text-align: center;
+  }
+
+  .footer-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .footer-logo {
+    order: 0;
+  }
+
+  .footer-logo img {
+    width: min(294px, 72vw);
+    height: auto;
+  }
+
+  .footer-center {
+    order: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 32px;
+  }
+
+  .footer-navigation-row {
+    order: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 28px;
+  }
+
+  .footer-links {
+    order: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px 32px;
+  }
+
+  .footer-navigation-row .socials {
+    order: 1;
+    display: flex;
+    align-self: center;
+    justify-content: center;
+    margin: 0;
+    gap: 16px;
+  }
+
+  .subscribe-form {
+    order: 2;
+    width: min(100%, 620px);
+    margin: 0 auto;
+  }
+
+  .subscribe-row {
+    grid-template-columns: minmax(0, 280px) auto;
+    justify-content: center;
+  }
+
+  .subscribe-email-field {
+    width: min(280px, 100%);
+  }
+}
+
+@media (max-width: 767px) {
+  .footer-logo img {
+    width: min(230px, 72vw);
+  }
+
+  .footer-links {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .subscribe-form {
+    width: 100%;
+  }
+
+  .subscribe-row {
+    grid-template-columns: minmax(0, 240px) auto;
+    justify-content: center;
+  }
+
+  .subscribe-email-field {
+    width: min(240px, 100%);
+  }
+}
+
+@media (min-width: 1440px) {
+  .footer-navigation-row .socials {
+    margin-left: auto;
+    justify-content: flex-end;
+  }
+
+  .subscribe-row {
+    grid-template-columns: 260px auto;
+  }
+
+  .subscribe-email-field {
+    width: 260px;
+  }
+}
+
+/* Definitive footer layout correction. */
+.subscribe-email-field input {
+  width: 100%;
+  background: #fff;
+}
+
+@media (max-width: 1439px) {
+  .footer-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 32px;
+  }
+
+  .footer-navigation-row {
+    order: 0;
+    width: 100%;
+  }
+
+  .subscribe-form {
+    order: 1;
+    width: auto;
+    max-width: 100%;
+  }
+
+  .socials {
+    order: 2;
+    align-self: center;
+    margin: 0;
+  }
+
+  .subscribe-row {
+    grid-template-columns: 240px auto;
+    justify-content: center;
+  }
+
+  .subscribe-email-field {
+    width: 240px;
+    max-width: 240px;
+  }
+}
+
+@media (max-width: 479px) {
+  .subscribe-form {
+    width: 100%;
+  }
+
+  .subscribe-row {
+    grid-template-columns: minmax(0, 210px) auto;
+  }
+
+  .subscribe-email-field {
+    width: 210px;
+    max-width: 210px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .footer-center {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto auto;
+    align-items: start;
+    column-gap: 32px;
+    row-gap: 28px;
+  }
+
+  .footer-navigation-row {
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+  }
+
+  .socials {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    align-self: center;
+    margin: 0;
+  }
+
+  .subscribe-form {
+    grid-column: 1;
+    grid-row: 2;
+    width: auto;
+    max-width: 640px;
+  }
+
+  .subscribe-row {
+    grid-template-columns: 240px auto;
+    justify-content: start;
+  }
+
+  .subscribe-email-field {
+    width: 240px;
+    max-width: 240px;
+  }
+}
